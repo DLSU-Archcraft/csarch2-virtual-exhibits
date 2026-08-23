@@ -659,8 +659,14 @@ tend to merely confirm whatever the code already does.
 All items from the initial draft are resolved: the `.env` key is renamed, the
 Workspace domain is confirmed, and the base path is settled as Phase 0a above.
 
+- **Render service name: `csarch2-virtual-exhibits`.** Fixes production
+  `PUBLIC_SITE_ORIGIN` (`https://csarch2-virtual-exhibits.onrender.com`) and the
+  second OAuth redirect URI
+  (`https://csarch2-virtual-exhibits.onrender.com/api/auth/google/callback`). If
+  the name is unavailable when the Render service is actually created, both
+  values change to match whatever subdomain Render assigns instead.
+
 Remaining, to confirm during implementation:
 
-- The Render service name, which fixes the second OAuth redirect URI.
 - Whether a paid Render instance is provisioned before judging, per the cold-start
   risk in [Operational risks](#operational-risks).
