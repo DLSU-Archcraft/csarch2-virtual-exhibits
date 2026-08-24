@@ -333,14 +333,11 @@ The source tree this was built from lives in the gitignored
 `.integration-src/` and carries local modifications that do **not** exist
 upstream — `src/lib/basePath.ts` plus nine call-site edits — so a fresh clone
 of `JoseBryanPerez/CSARCH2_Group_7` is *not* on its own sufficient to
-reproduce `public/s02g7/`; capturing those changes as a patch is deferred to
-Phase 0b.
+reproduce `public/s02g7/`; those changes have not yet been captured as a portable patch.
 
 ## 14. The Base Path
 
-The site is served at the root of its domain (`base: '/'` in
-`astro.config.mjs`). Never hardcode a base path segment in an exhibit —
-write root-relative paths like `/s01g8/diagram.webp` and they will work.
+The site is served at `/csarch2-virtual-exhibits` (`base: '/csarch2-virtual-exhibits'` in `astro.config.mjs`), matching where GitHub Pages serves this project repo under the `DLSU-Archcraft` org. Never hardcode the base segment by hand in an exhibit — every internal reference already carries it, applied by `tools/add-base.mjs`.
 
 Do not build a path out of `import.meta.env.BASE_URL` either. `BASE_URL`
 is the base exactly as Astro normalized it, which at `base: '/'` is
@@ -387,5 +384,3 @@ If the site does need to move off root, the sequence is:
    internal `href`/`src` against the real `dist/`, so anything missed in
    step 2 is reported rather than shipped.
 
-Phase 0b moves this site to Render at a root domain, so this is not
-expected to be needed.
