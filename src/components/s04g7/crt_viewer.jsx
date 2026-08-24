@@ -4,8 +4,6 @@ import '../../styles/s04g7/crt.css';
 import '../../styles/s04g7/pagebg.css';
 import '../../styles/s04g7/era.css';
 
-const BASE_URL = import.meta.env.BASE_URL || "/";
-
 {/* 
     CRT Parts Information:
     label: Name of CRT Part
@@ -332,7 +330,7 @@ export default function CrtViewer() {
             {/* Container for Go Back and Menu Tab */}
             <div className="crt-nav-header">
                 <div className="back-button-container">
-                    <a href={`${BASE_URL}/s04g7`} className="link-pill lower">
+                    <a href="/csarch2-virtual-exhibits/s04g7" className="link-pill lower">
                         ← Go Back
                     </a>
                 </div>

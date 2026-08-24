@@ -1,4 +1,4 @@
-:HL["/virtual-exhibit-template/s02g7/_next/static/chunks/3qoktcyz8z3o2.css","style"]
-:HL["/virtual-exhibit-template/s02g7/images/cover/NASM2.jpg","image"]
+:HL["/csarch2-virtual-exhibits/s02g7/_next/static/chunks/3qoktcyz8z3o2.css","style"]
+:HL["/csarch2-virtual-exhibits/s02g7/images/cover/NASM2.jpg","image"]
 :HL["../images/others/simulation.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"panels","param":null,"prefetchHints":0,"slots":{"children":{"name":"id","param":{"type":"d","key":"NASM","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"hDlPTXOnuPhDopCV5DjyR"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"panels","param":null,"prefetchHints":0,"slots":{"children":{"name":"id","param":{"type":"d","key":"NASM","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"j6KkspsGYf1JzFmW5zVNA"}

@@ -4,8 +4,6 @@ import '../../styles/s04g7/plasma.css';
 import '../../styles/s04g7/pagebg.css';
 import '../../styles/s04g7/era.css';
 
-const BASE_URL = import.meta.env.BASE_URL || "/";
-
 const PARTS = [
     {
         id: "substrates",
@@ -329,7 +327,7 @@ export default function PlasmaViewer() {
             {/* Header Flex Container for Go Back + Tabs */}
             <div className="plasma-nav-header">
                 <div className="back-button-container">
-                    <a href={`${BASE_URL}/s04g7`} className="link-pill lower">
+                    <a href="/csarch2-virtual-exhibits/s04g7" className="link-pill lower">
                         ← Go Back
                     </a>
                 </div>

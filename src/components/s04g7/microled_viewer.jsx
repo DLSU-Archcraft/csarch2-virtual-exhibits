@@ -7,8 +7,6 @@ import evolutionImg from "../../assets/s04g7/microled-evolution-structure.webp";
 import jiangImg from "../../assets/s04g7/prof-hongxing-jiang.webp";
 import linImg from "../../assets/s04g7/prof-jingyu-lin.webp";
 
-const BASE_URL = import.meta.env.BASE_URL || "/";
-
 {/*
     MicroLED Parts Information:
     label: Name of MicroLED Part
@@ -325,7 +323,7 @@ export default function MicroLEDViewer() {
 
             <div className="microled-nav-header">
                 <div className="back-button-container">
-                    <a href={`${BASE_URL}/s04g7`} className="link-pill lower">
+                    <a href="/csarch2-virtual-exhibits/s04g7" className="link-pill lower">
                         ← Go Back
                     </a>
                 </div>

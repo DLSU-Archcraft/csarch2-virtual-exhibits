@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "test": "node --test tools/test/*.mjs"
+    "test": "node --test tools/test/*.mjs",
+    "verify": "npm test && npm run build && node tools/verify-site.mjs && node tools/check-links.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",

@@ -86,7 +86,7 @@ test('references to a public asset gain the slug in both link shapes', () => {
     fromDir: 'pages', toDir: 'pages', pathMap, slug: 's03g9',
     routes: [], publicAssets: ['moon.svg'],
   });
-  assert.match(out, /src="\/virtual-exhibit-template\/s03g9\/moon\.svg"/);
+  assert.match(out, /src="\/s03g9\/moon\.svg"/);
   assert.match(out, /\$\{base\}s03g9\/moon\.svg/);
 });
 
@@ -130,7 +130,7 @@ test('the exact public asset is still rewritten when a longer filename shares it
   const out = rewriteFile('<img src="/logo.png">', {
     fromDir: 'pages', toDir: 'pages', pathMap, slug: 's03g9', routes: [], publicAssets: ['logo.png'],
   });
-  assert.match(out, /src="\/virtual-exhibit-template\/s03g9\/logo\.png"/);
+  assert.match(out, /src="\/s03g9\/logo\.png"/);
 });
 
 // --- root-absolute public-asset references gain the umbrella base (defect 2) ---
@@ -140,7 +140,7 @@ test('a root-absolute public asset reference gains both the umbrella base and th
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's40g1',
     routes: [], publicAssets: ['Clock.png'],
   });
-  assert.equal(out, '<img src="/virtual-exhibit-template/s40g1/Clock.png">');
+  assert.equal(out, '<img src="/s40g1/Clock.png">');
 });
 
 test('the ${base}-prefixed form is untouched by the umbrella-base fix - ${base} already supplies it', () => {
@@ -166,11 +166,16 @@ test('a route reference with no trailing slash before the closing backtick still
   assert.match(out, /\$\{base\}s01g5\/silicon-minds`/);
 });
 
-test('a slash-separated base link is rewritten and keeps its leading slash', () => {
+test('a slash-separated base link is rewritten and DROPS its leading slash', () => {
+  // Was asserted the other way round - "keeps its leading slash" - which
+  // locked in the shape that renders as "//s01g7/..." once BASE_URL is "/",
+  // i.e. the next import would have reintroduced the protocol-relative
+  // defect by design. The slash is now collapsed instead.
   const out = rewriteFile('href={`${baseUrl}/S01_Group7_fullcapacity/`}', {
     fromDir: 'pages', toDir: 'pages', pathMap, slug: 's01g7', routes: ['S01_Group7_fullcapacity'],
   });
-  assert.match(out, /\$\{baseUrl\}\/s01g7\/S01_Group7_fullcapacity\//);
+  assert.match(out, /\$\{baseUrl\}s01g7\/S01_Group7_fullcapacity\//);
+  assert.doesNotMatch(out, /\$\{baseUrl\}\//);
 });
 
 test('a no-separator base link is rewritten and gains no slash', () => {
@@ -188,11 +193,32 @@ test('the boundary still holds for the slash-separated form: a hyphen-prefix rou
   assert.equal(out, 'href={`${base}/references-appendix/`}');
 });
 
-test('a slash-separated public asset reference is rewritten and keeps its leading slash', () => {
+test('a slash-separated public asset reference is rewritten and DROPS its leading slash', () => {
+  // Same correction as the route case above: the old expectation
+  // "${base}/s03g9/moon.svg" renders as "//s03g9/moon.svg" at BASE_URL "/".
   const out = rewriteFile('href={`${base}/moon.svg`}', {
     fromDir: 'pages', toDir: 'pages', pathMap, slug: 's03g9', routes: [], publicAssets: ['moon.svg'],
   });
-  assert.match(out, /\$\{base\}\/s03g9\/moon\.svg/);
+  assert.match(out, /\$\{base\}s03g9\/moon\.svg/);
+  assert.doesNotMatch(out, /\$\{base\}\//);
+});
+
+test('an imported ${base}-prefixed reference cannot render as // at a root base', () => {
+  // The end-to-end statement of the two corrections above: take the emitted
+  // text, substitute what `import.meta.env.BASE_URL` actually is when
+  // astro.config.mjs says `base: '/'`, and no reference may begin with "//".
+  const out = rewriteFile(
+    'href={`${base}/moon.svg`} img={`${base}moon.svg`} ' +
+      'a={`${base}/simulator/`} b={`${base}simulator/`}',
+    {
+      fromDir: 'pages', toDir: 'pages', pathMap, slug: 's03g9',
+      routes: ['simulator'], publicAssets: ['moon.svg'],
+    },
+  );
+  const rendered = out.replace(/\$\{base[A-Za-z]*\}/g, '/');
+  assert.doesNotMatch(rendered, /\/\//, `rendered protocol-relative URL: ${rendered}`);
+  assert.match(rendered, /href=\{`\/s03g9\/moon\.svg`\}/);
+  assert.match(rendered, /a=\{`\/s03g9\/simulator\/`\}/);
 });
 
 // --- source-repo's-own-base rewriting (correction 1) ---
@@ -201,14 +227,14 @@ test('a hardcoded reference to the source repo\'s own base gains the umbrella ba
   const out = rewriteFile('<img src="/CSARCH2-G9-Exhibit/astronauts.png">', {
     fromDir: 'pages', toDir: 'pages', pathMap, slug: 's03g9', sourceBase: 'CSARCH2-G9-Exhibit',
   });
-  assert.equal(out, '<img src="/virtual-exhibit-template/s03g9/astronauts.png">');
+  assert.equal(out, '<img src="/s03g9/astronauts.png">');
 });
 
 test('the same rewrite applies inside a CSS url() reference', () => {
   const out = rewriteFile("@font-face { src: url('/CSARCH2-G9-Exhibit/astronauts.png'); }", {
     fromDir: 'styles', toDir: 'styles', pathMap, slug: 's03g9', sourceBase: 'CSARCH2-G9-Exhibit',
   });
-  assert.match(out, /url\('\/virtual-exhibit-template\/s03g9\/astronauts\.png'\)/);
+  assert.match(out, /url\('\/s03g9\/astronauts\.png'\)/);
 });
 
 test('a reference to a different repo\'s base is left untouched', () => {
@@ -256,7 +282,7 @@ test('a Map rename is applied to the root-absolute form: search old extension, w
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's40g1',
     routes: [], publicAssets: new Map([['Clock.png', 'Clock.webp']]),
   });
-  assert.equal(out, '<img src="/virtual-exhibit-template/s40g1/Clock.webp">');
+  assert.equal(out, '<img src="/s40g1/Clock.webp">');
 });
 
 test('the same Map rename is applied to the ${base}-prefixed form without doubling the umbrella base', () => {
@@ -273,7 +299,7 @@ test('an asset that maps to itself is re-pointed but keeps its extension', () =>
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's40g1',
     routes: [], publicAssets: new Map([['model.glb', 'model.glb']]),
   });
-  assert.equal(out, '<img src="/virtual-exhibit-template/s40g1/model.glb">');
+  assert.equal(out, '<img src="/s40g1/model.glb">');
 });
 
 test('a nested (subdirectory) name is renamed correctly', () => {
@@ -281,7 +307,7 @@ test('a nested (subdirectory) name is renamed correctly', () => {
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's40g1',
     routes: [], publicAssets: new Map([['imgs/tile.png', 'imgs/tile.webp']]),
   });
-  assert.equal(out, '<img src="/virtual-exhibit-template/s40g1/imgs/tile.webp">');
+  assert.equal(out, '<img src="/s40g1/imgs/tile.webp">');
 });
 
 test('a plain array still works exactly as before (backward-compat guard)', () => {
@@ -289,7 +315,7 @@ test('a plain array still works exactly as before (backward-compat guard)', () =
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's40g1',
     routes: [], publicAssets: ['Clock.png'],
   });
-  assert.match(out, /src="\/virtual-exhibit-template\/s40g1\/Clock\.png"/);
+  assert.match(out, /src="\/s40g1\/Clock\.png"/);
   assert.match(out, /\$\{base\}s40g1\/Clock\.png/);
 });
 
@@ -309,7 +335,9 @@ test('the entry page maps to the bare slug, not slug/<its-old-name>', () => {
   const out = rewriteFile('href={`${baseUrl}/01-main`}', {
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's01g8', routes: routeMap,
   });
-  assert.equal(out, 'href={`${baseUrl}/s01g8`}');
+  // Expectation corrected with the ${base}-slash collapse: the old
+  // '${baseUrl}/s01g8' renders as '//s01g8' at BASE_URL '/'.
+  assert.equal(out, 'href={`${baseUrl}s01g8`}');
   assert.doesNotMatch(out, /s01g8\/01-main/);
 });
 
@@ -318,7 +346,7 @@ test('a sub-page\'s bare-name key rewrites the ${base}/ form to slug/name', () =
   const out = rewriteFile('href={`${base}/08-shader-lab`}', {
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's01g8', routes: routeMap,
   });
-  assert.equal(out, 'href={`${base}/s01g8/08-shader-lab`}');
+  assert.equal(out, 'href={`${base}s01g8/08-shader-lab`}');
 });
 
 test('the combined subdir/name form is rewritten and the sub-directory segment is dropped', () => {
@@ -326,7 +354,7 @@ test('the combined subdir/name form is rewritten and the sub-directory segment i
   const out = rewriteFile('href={`${base}/S01_Group8_subpages/02-introduction`}', {
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's01g8', routes: routeMap,
   });
-  assert.equal(out, 'href={`${base}/s01g8/02-introduction`}');
+  assert.equal(out, 'href={`${base}s01g8/02-introduction`}');
 });
 
 test('longest key wins: the combined form is rewritten exactly once, not nested or doubled', () => {
@@ -337,7 +365,7 @@ test('longest key wins: the combined form is rewritten exactly once, not nested 
   const out = rewriteFile('href={`${base}/S01_Group8_subpages/02-introduction`}', {
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's01g8', routes: routeMap,
   });
-  assert.equal(out, 'href={`${base}/s01g8/02-introduction`}');
+  assert.equal(out, 'href={`${base}s01g8/02-introduction`}');
 });
 
 test('a root-absolute route reference gains the umbrella base and the mapped value', () => {
@@ -345,7 +373,7 @@ test('a root-absolute route reference gains the umbrella base and the mapped val
   const out = rewriteFile('<a href="/08-shader-lab">Lab</a>', {
     fromDir: 'pages', toDir: 'pages', pathMap: new Map(), slug: 's01g8', routes: routeMap,
   });
-  assert.equal(out, '<a href="/virtual-exhibit-template/s01g8/08-shader-lab">Lab</a>');
+  assert.equal(out, '<a href="/s01g8/08-shader-lab">Lab</a>');
 });
 
 test('the boundary guard still holds with a route map: references does not match references-appendix', () => {
@@ -381,16 +409,64 @@ test('a bare root link to the source base is rewritten, not only paths under it'
   };
   assert.equal(
     rewriteFile('<a href="/CSARCH2-Group-7">home</a>', opts),
-    '<a href="/virtual-exhibit-template/s05g7">home</a>',
+    '<a href="/s05g7">home</a>',
   );
   // paths under the base still work
   assert.equal(
     rewriteFile('<img src="/CSARCH2-Group-7/logo.png">', opts),
-    '<img src="/virtual-exhibit-template/s05g7/logo.png">',
+    '<img src="/s05g7/logo.png">',
   );
   // a longer base that merely starts with it must NOT match
   assert.equal(
     rewriteFile('<a href="/CSARCH2-Group-77">x</a>', opts),
     '<a href="/CSARCH2-Group-77">x</a>',
   );
+});
+
+test('a root umbrella base produces a single leading slash, not //', () => {
+  const out = rewriteFile('<img src="/Clock.png">', {
+    slug: 's40g1',
+    publicAssets: ['Clock.png'],
+    umbrellaBase: '',
+  });
+  assert.equal(out, '<img src="/s40g1/Clock.png">');
+  assert.doesNotMatch(out, /\/\//, 'emitted a protocol-relative URL');
+});
+
+test('a non-empty umbrella base is still spliced in', () => {
+  const out = rewriteFile('<img src="/Clock.png">', {
+    slug: 's40g1',
+    publicAssets: ['Clock.png'],
+    umbrellaBase: 'csarch2',
+  });
+  assert.equal(out, '<img src="/csarch2/s40g1/Clock.png">');
+});
+
+test('an umbrella base with a leading slash is normalized, not doubled', () => {
+  const out = rewriteFile('<img src="/Clock.png">', {
+    slug: 's40g1',
+    publicAssets: ['Clock.png'],
+    umbrellaBase: '/csarch2',
+  });
+  assert.equal(out, '<img src="/csarch2/s40g1/Clock.png">');
+  assert.doesNotMatch(out, /\/\//, 'emitted a protocol-relative URL');
+});
+
+test('an umbrella base with a trailing slash is normalized, not doubled', () => {
+  const out = rewriteFile('<img src="/Clock.png">', {
+    slug: 's40g1',
+    publicAssets: ['Clock.png'],
+    umbrellaBase: 'csarch2/',
+  });
+  assert.equal(out, '<img src="/csarch2/s40g1/Clock.png">');
+});
+
+test('an umbrella base with both leading and trailing slashes is normalized', () => {
+  const out = rewriteFile('<img src="/Clock.png">', {
+    slug: 's40g1',
+    publicAssets: ['Clock.png'],
+    umbrellaBase: '/csarch2/',
+  });
+  assert.equal(out, '<img src="/csarch2/s40g1/Clock.png">');
+  assert.doesNotMatch(out, /\/\//, 'emitted a protocol-relative URL');
 });

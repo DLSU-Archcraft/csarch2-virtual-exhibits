@@ -1,6 +1,10 @@
 ---
 import '../../styles/s01g8/gpu-theme.css';
 const baseUrl = import.meta.env.BASE_URL;
+// NOTE: these `href` values are deliberately bare (base-EXCLUSIVE) — they
+// feed the dynamic `${baseUrl}/${item.href}` concatenation below, so a
+// codemod-prefixed literal here would double-prefix. See
+// tools/add-base.mjs's EXCLUDE set.
 const nav = [
     { href: '/s01g8', label: 'Museum Hub' },
     { href: '/s01g8/02-introduction', label: 'Introduction' },
@@ -17,14 +21,17 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
     <a href={`${baseUrl.replace(/\/$/, '')}/s01g8`} class="exhibit-header__brand">GPU WARS</a>
 
     <nav class="exhibit-header__nav">
-        {nav.map((item) => (
-            <a
-                href={`${baseUrl.replace(/\/$/, '')}/${item.href.replace(/^\//, '')}`}
-                class:list={['exhibit-header__link', { 'is-active': currentPath === item.href }]}
-            >
-                {item.label}
-            </a>
-        ))}
+        {nav.map((item) => {
+            const fullHref = `${baseUrl.replace(/\/$/, '')}/${item.href.replace(/^\//, '')}`;
+            return (
+                <a
+                    href={fullHref}
+                    class:list={['exhibit-header__link', { 'is-active': currentPath === fullHref }]}
+                >
+                    {item.label}
+                </a>
+            );
+        })}
     </nav>
 </header>
 

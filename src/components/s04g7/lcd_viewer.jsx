@@ -13,8 +13,6 @@ import patientImg from "../../assets/s04g7/patient.webp";
 import industryImg from "../../assets/s04g7/industry.webp";
 import watchImg from "../../assets/s04g7/watch.webp";
 
-const BASE_URL = import.meta.env.BASE_URL || "/";
-
 const PARTS = [
     {
         id: "crystal",
@@ -364,7 +362,7 @@ export default function LcdViewer() {
             <div className="bg"></div>
             <div className="lcd-nav-header">
                 <div className="back-button-container">
-                    <a href={`${BASE_URL}/s04g7`} className="link-pill lower">
+                    <a href="/csarch2-virtual-exhibits/s04g7" className="link-pill lower">
                         ← Go Back
                     </a>
                 </div>

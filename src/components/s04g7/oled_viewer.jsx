@@ -4,8 +4,6 @@ import '../../styles/s04g7/oled.css';
 import '../../styles/s04g7/pagebg.css';
 import '../../styles/s04g7/era.css';
 
-const BASE_URL = import.meta.env.BASE_URL || "/";
-
 // OLED layers displayed in the interactive 3D model
 const PARTS = [
     {
@@ -367,7 +365,7 @@ export default function OledViewer() {
           
             <div className="oled-nav-header">
                 <div className="back-button-container">
-                    <a href={`${BASE_URL}/s04g7`} className="link-pill lower">
+                    <a href="/csarch2-virtual-exhibits/s04g7" className="link-pill lower">
                         ← Go Back
                     </a>
                 </div>

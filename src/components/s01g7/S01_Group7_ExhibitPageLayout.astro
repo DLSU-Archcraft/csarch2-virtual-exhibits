@@ -12,7 +12,6 @@ import Navbar from './Navbar.astro';
 import Footer from './Footer.astro';
 import '../../styles/s01g7/site.css';
 
-const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <!DOCTYPE html>
@@ -43,7 +42,7 @@ const baseUrl = import.meta.env.BASE_URL;
 
       <main class="exhibit-main">
         <div class="exhibit-header-bar">
-          <a href={`${baseUrl}/s01g7`} class="back-link">&larr; Back to Main Page</a>
+          <a href="/csarch2-virtual-exhibits/s01g7" class="back-link">&larr; Back to Main Page</a>
           <h1 class="exhibit-page-title">{pageTitle}</h1>
           <p class="exhibit-page-sub">{subtitle}</p>
           <span class="exhibit-meta">by {author} &middot; {readingTime}</span>

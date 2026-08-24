@@ -20,6 +20,7 @@
   - [11. Protected Shared Files](#11-protected-shared-files)
   - [12. Adding or Re-Importing an Exhibit](#12-adding-or-re-importing-an-exhibit)
   - [13. The s02g7 Exception](#13-the-s02g7-exception)
+  - [14. The Base Path](#14-the-base-path)
 
 ---
 
@@ -48,6 +49,16 @@ npm install
 ```
 npm run dev
 ```
+
+### Commands
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Dev server on `localhost:4321`. |
+| `npm run build` | Static build into `dist/`. |
+| `npm run preview` | Serve the built `dist/` locally. |
+| `npm test` | Unit tests for the tooling in `tools/`. |
+| `npm run verify` | The full gate: `npm test`, then `npm run build`, then `node tools/verify-site.mjs` (every exhibit in `exhibits.json` has a built route) and `node tools/check-links.mjs` (every internal `href`/`src` in `dist/` resolves). Run this before committing anything that touches `src/` or `tools/`. |
 
 ---
 
@@ -201,7 +212,7 @@ Astro handles routing automatically once your `.mdx` file is in `src/pages/`.
 npm run dev
 ```
 
-2. Visit your page at `localhost:4321/virtual-exhibit-template/topic_name`.
+2. Visit your page at `localhost:4321/topic_name`.
 
 ---
 
@@ -296,3 +307,132 @@ lists its `status` as `"external"` rather than `"live"`. This was the only
 exhibit in the entire 53-exhibit corpus that needed this fallback — every
 other exhibit, however unusual its own stack (Tailwind, `import.meta.glob`,
 dynamic routes, content collections), was merged as real Astro source.
+
+### Rebuilding s02g7
+
+Its `basePath` is baked into hashed chunk filenames and JSON payloads, so it can
+only be rebuilt, never text-rewritten. Three changes are required, and missing
+either of the last two produces a build that looks fine and is quietly broken:
+
+1. `next.config.mjs` — `basePath` must match the route (`/s02g7` at the current
+   root base).
+2. `src/lib/basePath.ts` — an independently maintained `BASE_PATH` mirror, used
+   by hand-written `<img>`/`<a>` tags. Next only auto-prefixes `next/link` and
+   `next/image`, so this constant must be edited in lockstep. Skipping it left
+   34 files pointing at the old base.
+3. `next.config.mjs` — `trailingSlash: true`. Without it the App Router export
+   emits extensionless links that depend on host-side clean-URL rewriting, which
+   this static site does not do. Skipping it produced 88 dead links with an
+   otherwise perfectly correct `basePath`.
+
+Then `npm run build` in the source tree, replace `public/s02g7/` with its `out/`,
+and stage with `git add -A public/s02g7` — the hashed filenames change, so
+deletions must be staged too. Verify with `node tools/check-links.mjs`.
+
+The source tree this was built from lives in the gitignored
+`.integration-src/` and carries local modifications that do **not** exist
+upstream — `src/lib/basePath.ts` plus nine call-site edits — so a fresh clone
+of `JoseBryanPerez/CSARCH2_Group_7` is *not* on its own sufficient to
+reproduce `public/s02g7/`; those changes have not yet been captured
+as a portable patch.
+
+## 14. The Base Path
+
+The site is served at `/csarch2-virtual-exhibits` (`base:
+'/csarch2-virtual-exhibits'` in `astro.config.mjs`), matching where
+GitHub Pages serves this project repo under the `DLSU-Archcraft` org.
+Never hardcode the base segment by hand in an exhibit — every
+internal reference already carries it, applied by
+`tools/add-base.mjs`.
+
+Most internal references in this codebase are not built at runtime
+at all — they are literal, root-relative strings that already carry
+the base segment (e.g. `/csarch2-virtual-exhibits/s01g8/foo.webp`),
+written into `src/` and kept correct by `tools/add-base.mjs`'s
+codemod. Prefer that literal form. Do not build the same path out of
+`import.meta.env.BASE_URL` when a literal will do — the codemod can
+only see literal slug text, so a path assembled at runtime is
+invisible to it.
+
+A few files have no choice: the reference is built from a value the
+codemod can never see as source text, such as a slug arriving as a
+prop rather than literal text. `src/components/ExhibitCard.astro` is
+the live example, and does this correctly. In files like it,
+`BASE_URL` is the base exactly as Astro normalized it, which at this
+project's `base: '/csarch2-virtual-exhibits'` is
+`"/csarch2-virtual-exhibits/"` — note the trailing slash. Naively
+writing ``href={`${import.meta.env.BASE_URL}/${slug}`}`` therefore
+renders a redundant `//` **mid-path**
+(`/csarch2-virtual-exhibits//s01g8`), not the scheme-relative
+`//s01g8` this project shipped back when the base was still root.
+That is still a real defect: a static host does not necessarily
+collapse the duplicate slash the way Node's `path.join` does, so the
+link can 404 in production — and `tools/check-links.mjs` will not
+reliably catch it either, since it only flags a `//` at the very
+start of a reference, and a mid-path duplicate resolves fine locally
+because `path.join` silently collapses it when comparing against
+`dist/`. Strip the trailing slash first, exactly as
+`ExhibitCard.astro` does — `import.meta.env.BASE_URL.replace(/\/$/,
+'')` — then build ``${base}/${slug}``.
+
+`tools/test/no-hardcoded-base.test.mjs` fails the build if a hardcoded
+base segment reappears.
+
+### Moving the site under a path
+
+Two complementary tools handle the two directions a base change can
+go: renaming or removing an existing base, and adding one where
+there is none.
+
+`tools/rewrite-base.mjs` swaps one *existing* base segment for
+another across `src/` — or removes it, back to root, with `--to ''`
+— skipping the external URLs in `src/data/exhibits.json` and
+anywhere else the segment appears after a scheme-and-host:
+
+    node tools/rewrite-base.mjs --from csarch2-virtual-exhibits --to csarch3-virtual-exhibits --dry-run
+    node tools/rewrite-base.mjs --from csarch2-virtual-exhibits --to ''   # back to root
+
+**It cannot add a base where there is none.** It keys on the literal
+segment being replaced; at a root base there is no such segment,
+only a leading `/` indistinguishable from every other slash in the
+tree. `--from ''` used to be documented here and silently corrupted
+every path it touched (`/s01g8/diagram.webp` →
+`/csarch2s01g8/csarch2diagram.webp`); it is now rejected with an
+error.
+
+`tools/add-base.mjs` is the complementary tool for that direction —
+root to a named base — which is how this site got its current
+`/csarch2-virtual-exhibits` base in the first place. With no literal
+segment to key on either, it keys on the known set of exhibit slugs
+from `exhibits.json` instead, prefixing every root-relative
+`/<slug>...` reference it finds under `src/`:
+
+    node tools/add-base.mjs --base csarch2-virtual-exhibits --dry-run
+    node tools/add-base.mjs --base csarch2-virtual-exhibits
+
+It shares `rewrite-base.mjs`'s exclusion of `exhibits.json`'s
+external URLs, plus three files that combine the base with a slug
+*dynamically* at render time instead of as a literal string:
+`src/data/s02g9/rooms.ts`,
+`src/components/s01g2/S01_Group2_FreeBSDLayout.astro`, and
+`src/components/s01g8/Header.astro`. Codemod-prefixing a literal in
+those files would double the base the moment the dynamic
+concatenation ran — the same class of bug described above.
+
+With both tools available, moving the site to a different base — off
+root, between two named bases, or back to root — is one command plus
+a rebuild:
+
+1. Set the new `base:` in `astro.config.mjs`. This fixes everything
+   Astro itself generates (bundled assets, `<link>`/`<script>` tags,
+   `Astro.url`) but **not** the root-relative literals in exhibit
+   markup, which Astro emits verbatim.
+2. Run `tools/add-base.mjs` (moving off root) or
+   `tools/rewrite-base.mjs` (renaming an existing base, or moving
+   back to root) to bring those literals in line.
+3. Rebuild and run `node tools/check-links.mjs`. It resolves every
+   internal `href`/`src` against the real `dist/`, base-aware per
+   the project's actual `base:` — a literal missed in step 2 is now
+   reported as missing the required base, not just as a generic dead
+   link.
+

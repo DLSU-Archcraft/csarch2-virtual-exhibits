@@ -12,40 +12,40 @@ export const getImageForData = (data) => {
 
   switch (data) {
     case 'Teacup':
-      return '/virtual-exhibit-template/s40g1/Teacup.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Teacup.webp';
 
     case 'Broken Teacup':
-      return '/virtual-exhibit-template/s40g1/Broken-Teacup.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Broken-Teacup.webp';
 
     case 'Knife':
-      return '/virtual-exhibit-template/s40g1/Knife.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Knife.webp';
 
     case 'Broken Knife':
-      return '/virtual-exhibit-template/s40g1/Broken-Knife.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Broken-Knife.webp';
 
     case 'Top Hat':
-      return '/virtual-exhibit-template/s40g1/Top-Hat.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Top-Hat.webp';
 
     case 'Broken Top-Hat':
-      return '/virtual-exhibit-template/s40g1/Broken-Top-Hat.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Broken-Top-Hat.webp';
 
     case 'Clock':
-      return '/virtual-exhibit-template/s40g1/Clock.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Clock.webp';
 
     case 'Broken Clock':
-      return '/virtual-exhibit-template/s40g1/Broken-Clock.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Broken-Clock.webp';
 
     case 'Key':
-      return '/virtual-exhibit-template/s40g1/Key.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Key.webp';
 
     case 'Broken Key':
-      return '/virtual-exhibit-template/s40g1/Broken-Key.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Broken-Key.webp';
 
     case 'Broken Mirror':
-      return '/virtual-exhibit-template/s40g1/Broken-Mirror.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Broken-Mirror.webp';
 
     default:
-      return '/virtual-exhibit-template/s40g1/Broken-Mirror.webp';
+      return '/csarch2-virtual-exhibits/s40g1/Broken-Mirror.webp';
   }
 };
 

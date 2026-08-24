@@ -11,18 +11,22 @@ export interface Props {
 const { title, description = 'Silicon Minds: The Evolution of the Mobile Microprocessor' } = Astro.props.frontmatter ?? Astro.props;
 const base = import.meta.env.BASE_URL;
 
-// Active nav detection
-const path = Astro.url.pathname.replace(base.replace(/\/$/, ''), '') || '/';
+// Active nav detection. `path` is compared against `navLinks[].href` below,
+// and those hrefs are base-inclusive literals (correctly left that way by
+// the base-path codemod), so `path` must stay base-inclusive too — do not
+// strip `base` back out here, or the comparison can never match once the
+// site's base is non-root.
+const path = Astro.url.pathname || '/';
 const isActive = (href: string) => {
-  if (href === '/s01g5') return path === '/s01g5' || path === '/s01g5/';
+  if (href === '/csarch2-virtual-exhibits/s01g5') return path === '/csarch2-virtual-exhibits/s01g5' || path === '/csarch2-virtual-exhibits/s01g5/';
   return path.startsWith(href);
 };
 
 const navLinks = [
-  { href: '/s01g5', label: 'Home' },
-  { href: '/s01g5/explore', label: 'Explore' },
-  { href: '/s01g5/timeline', label: 'Timeline' },
-  { href: '/s01g5/about', label: 'About' },
+  { href: '/csarch2-virtual-exhibits/s01g5', label: 'Home' },
+  { href: '/csarch2-virtual-exhibits/s01g5/explore', label: 'Explore' },
+  { href: '/csarch2-virtual-exhibits/s01g5/timeline', label: 'Timeline' },
+  { href: '/csarch2-virtual-exhibits/s01g5/about', label: 'About' },
 ];
 ---
 
@@ -135,7 +139,7 @@ const navLinks = [
 
         <!-- Logo -->
         <a
-          href={`${base}/s01g5`}
+          href="/csarch2-virtual-exhibits/s01g5"
           class="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-s01g5-primary rounded-s01g5-sm"
           aria-label="Silicon Minds home"
         >
@@ -161,7 +165,7 @@ const navLinks = [
         <nav aria-label="Main navigation" class="hidden md:flex items-center gap-1">
           {navLinks.map(link => (
             <a
-              href={`${base}${link.href}`}
+              href={link.href}
               class={`relative px-3 py-1.5 text-sm rounded-s01g5-md transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-s01g5-primary ${
                 isActive(link.href)
                   ? 'text-s01g5-text-primary'
@@ -179,7 +183,7 @@ const navLinks = [
             </a>
           ))}
           <a
-            href={`${base}/s01g5/explore`}
+            href="/csarch2-virtual-exhibits/s01g5/explore"
             class="btn-primary ml-3 py-2 px-4 text-xs"
             style="padding: 7px 16px; font-size: 14px; letter-spacing: 0.05em;"
           >
@@ -208,7 +212,7 @@ const navLinks = [
       <nav aria-label="Mobile navigation" class="flex flex-col px-5 py-4 gap-1">
         {navLinks.map(link => (
           <a
-            href={`${base}${link.href}`}
+            href={link.href}
             class={`px-3 py-2.5 text-sm rounded-s01g5-md transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-s01g5-primary ${
               isActive(link.href)
                 ? 'text-s01g5-text-primary bg-white/[0.04]'
@@ -218,7 +222,7 @@ const navLinks = [
             {link.label}
           </a>
         ))}
-        <a href={`${base}/s01g5/explore`} class="btn-primary text-sm text-center mt-3 justify-center">
+        <a href="/csarch2-virtual-exhibits/s01g5/explore" class="btn-primary text-sm text-center mt-3 justify-center">
           Enter Exhibit
         </a>
       </nav>

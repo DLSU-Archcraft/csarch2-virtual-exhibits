@@ -15,7 +15,23 @@ const TRAILING_BOUNDARY = '(?=[`\'"/#?]|$)';
 // every call site; rewriteFile still takes it as an overridable option below
 // rather than baking the literal into the regex, so a caller can pass a
 // different value instead of forking this file if that ever stops being true.
-const UMBRELLA_BASE = 'virtual-exhibit-template';
+// The site is served at root (astro.config.mjs `base: '/'`). Empty means
+// "no base segment"; joinUmbrella collapses it correctly.
+const UMBRELLA_BASE = '';
+
+// With the site served at root, umbrellaBase is '' and a naive
+// `/${base}/${rest}` emits `//rest` — a protocol-relative URL, which the
+// browser resolves against a HOST rather than the site root. Collapse the
+// empty case instead of interpolating it. A caller may also pass a base
+// copied straight out of an astro.config `base:` value, conventionally
+// written with a leading (and sometimes trailing) slash - e.g. '/csarch2' -
+// so run it through normalizeBase first, the same normalization already
+// applied to sourceBase below, or a decorated base reintroduces the exact
+// '//' defect this helper exists to prevent.
+function joinUmbrella(base, rest) {
+  const normalized = normalizeBase(base);
+  return normalized ? `/${normalized}/${rest}` : `/${rest}`;
+}
 
 // A source repo's own astro.config `base:` shows up in the wild as
 // '/CSARCH2-Group-6/', 'virtual-exhibit-template', '/', or '' — leading and
@@ -101,23 +117,27 @@ export function rewriteFile(
   for (const [key, value] of sortedRoutes) {
     const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     // ${base}route/  ->  ${base}<value>/
-    // ${base}/route/ -> ${base}/<value>/
+    // ${base}/route/ -> ${base}<value>/
     // Student code writes both shapes (with and without a single separating
-    // slash between the base template literal and the route name); the
-    // optional slash is captured and echoed back unchanged. Replaced via a
-    // function (not a "$1$2..." template) for the same reason as
-    // publicAssets below: a `value` containing a literal "$" must never be
-    // misread as a backreference.
+    // slash between the base template literal and the route name). The
+    // captured slash is DROPPED, not echoed back: `${base}` renders as
+    // `import.meta.env.BASE_URL`, which at this site's `base: '/'` is "/",
+    // so echoing the slash emitted "//<route>" - a protocol-relative URL the
+    // browser resolves against a HOST. Collapsing makes both shapes converge
+    // on the separator-free form, the same one the no-slash branch has always
+    // produced. Replaced via a function (not a "$1$2..." template) for the
+    // same reason as publicAssets below: a `value` containing a literal "$"
+    // must never be misread as a backreference.
     out = out.replace(
       new RegExp('(\\$\\{base[A-Za-z]*\\})(/?)(' + escaped + ')' + TRAILING_BOUNDARY, 'g'),
-      (match, baseLit, slash) => `${baseLit}${slash}${value}`,
+      (match, baseLit) => `${baseLit}${value}`,
     );
     // The root-absolute form ("/08-shader-lab") resolves at the browser
     // root, so — like a root-absolute public-asset reference below — it
     // needs the umbrella site's own base spliced in ahead of `value` too.
     out = out.replace(
       new RegExp('(["\'`])/(' + escaped + ')' + TRAILING_BOUNDARY, 'g'),
-      (match, quote) => `${quote}/${umbrellaBase}/${value}`,
+      (match, quote) => `${quote}${joinUmbrella(umbrellaBase, value)}`,
     );
   }
 
@@ -140,22 +160,25 @@ export function rewriteFile(
   for (const [original, final] of assetEntries) {
     const escaped = original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     // Same optional-slash blind spot as routes above: ${base}/logo.png and
-    // ${base}logo.png both occur in the wild. Replaced via a function (not
-    // a "$1$2..." template) so that a `final` name containing a literal
-    // "$" can never be misread as a backreference.
+    // ${base}logo.png both occur in the wild, and the captured slash is
+    // dropped for the same reason - `${base}` is "/" at this site's base, so
+    // keeping it emitted "//<slug>/<asset>". Replaced via a function (not a
+    // "$1$2..." template) so that a `final` name containing a literal "$"
+    // can never be misread as a backreference.
     out = out.replace(
       new RegExp('(\\$\\{base[A-Za-z]*\\})(/?)(' + escaped + ')' + TRAILING_BOUNDARY, 'g'),
-      (match, baseLit, slash) => `${baseLit}${slash}${slug}/${final}`,
+      (match, baseLit) => `${baseLit}${slug}/${final}`,
     );
     // The root-absolute form ("/Clock.png") resolves at the browser root, so
     // it needs both the umbrella site's own base AND the slug spliced in:
-    // "/Clock.png" -> "/virtual-exhibit-template/s40g1/Clock.webp". This is
+    // "/Clock.png" -> "/s40g1/Clock.webp" (or "/<umbrellaBase>/s40g1/Clock.webp"
+    // when umbrellaBase is set, e.g. for a non-root future deploy). This is
     // unlike the ${base}-prefixed form just above, whose ${base} already
     // supplies the umbrella base at runtime - adding it there too would
     // double it, so only this root-absolute branch gets umbrellaBase.
     out = out.replace(
       new RegExp('(["\'`])/(' + escaped + ')' + TRAILING_BOUNDARY, 'g'),
-      (match, quote) => `${quote}/${umbrellaBase}/${slug}/${final}`,
+      (match, quote) => `${quote}${joinUmbrella(umbrellaBase, `${slug}/${final}`)}`,
     );
   }
 
@@ -184,7 +207,7 @@ export function rewriteFile(
     // requiring the slash silently missed the bare form and shipped a 404.
     out = out.replace(
       new RegExp('(["\'`])/' + escapedBase + '(/|(?=["\'`]))', 'g'),
-      (_m, q, tail) => `${q}/${umbrellaBase}/${slug}${tail === '/' ? '/' : ''}`,
+      (_m, q, tail) => `${q}${joinUmbrella(umbrellaBase, slug)}${tail === '/' ? '/' : ''}`,
     );
   }
 

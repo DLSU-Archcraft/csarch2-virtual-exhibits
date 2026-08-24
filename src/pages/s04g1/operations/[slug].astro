@@ -15,7 +15,6 @@ export async function getStaticPaths() {
 const { op } = Astro.props;
 const { data } = op;
 const { Content, headings } = await render(op);
-const base = import.meta.env.BASE_URL;
 ---
 
 <ExhibitLayout
@@ -26,7 +25,7 @@ const base = import.meta.env.BASE_URL;
 >
   <S04_Group1_ExhibitShell>
   <div class="op wrap">
-    <a class="op__back" href={`${base}/s04g1/#operations`}>&larr; Back to operations</a>
+    <a class="op__back" href="/csarch2-virtual-exhibits/s04g1/#operations">&larr; Back to operations</a>
 
     <header class="op__header">
       <div class="op__badges">

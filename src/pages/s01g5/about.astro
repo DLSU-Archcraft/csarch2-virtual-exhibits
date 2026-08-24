@@ -3,7 +3,6 @@ import BaseLayout from '../../components/s01g5/S01_Group5_BaseLayout.astro';
 import ChipFloat from '../../components/s01g5/ChipFloat.astro';
 import { getCollection } from 'astro:content';
 
-const base = import.meta.env.BASE_URL;
 const ERA_COLORS = ['#22D3EE', '#34D399', '#F59E0B', '#A78BFA', '#F472B6'];
 
 // Build the per-processor reference list, grouped by era, straight from the
@@ -165,7 +164,7 @@ const refsByEra = eras
                   {member.name.split(' ').map(w => w[0]).join('').slice(0, 3)}
                   <small>NO SIGNAL</small>
                 </span>
-                <img class="team-photo" src={`${base}/s01g5/assets/team/${member.slug}.webp`} alt={member.name} loading="lazy" onerror="this.remove()" />
+                <img class="team-photo" src={`/csarch2-virtual-exhibits/s01g5/assets/team/${member.slug}.webp`} alt={member.name} loading="lazy" onerror="this.remove()" />
                 <div class="team-scanlines" aria-hidden="true"></div>
                 <div class="team-scan" aria-hidden="true"></div>
                 <div class="team-boot font-s01g5-mono" aria-hidden="true"><span class="team-boot-dot"></span>LOADING</div>

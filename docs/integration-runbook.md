@@ -70,8 +70,8 @@ Set `"status": "live"` on the exhibit's entry in `src/data/exhibits.json`.
 ## 7. Verify
 
 ```bash
-npm run build && npm test && node tools/verify-site.mjs
-npm run preview   # then open http://localhost:4321/virtual-exhibit-template/<slug>
+npm run verify    # tests, build, verify-site, check-links
+npm run preview   # then open http://localhost:4321/<slug>
 ```
 
 Compare against the exhibit's original deployment link from the spreadsheet.

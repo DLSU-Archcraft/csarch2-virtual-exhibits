@@ -155,7 +155,7 @@ test('a source repo\'s own astro.config base is read, normalized, and used to re
   assert.equal(result.status, 0);
   assert.match(result.stdout, /source base: CSARCH2-G9-Exhibit/);
   const page = readFileSync(join(cwd, 'src', 'pages', 's03g9.mdx'), 'utf8');
-  assert.match(page, /src="\/virtual-exhibit-template\/s03g9\/astronauts\.png"/);
+  assert.match(page, /src="\/s03g9\/astronauts\.png"/);
 });
 
 test('a source repo with no base (or the default "/") in its astro.config gets no rewriting and no crash', () => {
@@ -307,7 +307,9 @@ test('the entry page\'s own name maps to the bare slug in the built routes map',
   );
   assert.equal(result.status, 0);
   const page = readFileSync(join(cwd, 'src', 'pages', 's01g1.mdx'), 'utf8');
-  assert.match(page, /href=\{`\$\{base\}\/s01g1`\}/);
+  // Collapsed form: `${base}` is "/" at this site's base, so keeping the
+  // authored separator would emit "//s01g1" (see rewrite.mjs).
+  assert.match(page, /href=\{`\$\{base\}s01g1`\}/);
   assert.doesNotMatch(page, /s01g1\/entry/);
 });
 

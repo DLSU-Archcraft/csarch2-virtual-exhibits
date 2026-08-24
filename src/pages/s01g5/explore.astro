@@ -14,8 +14,6 @@ const allProcessors = processorsRaw.flatMap(e => e.data);
 const quizRaw = await getCollection('s01g5Quiz');
 const questions = quizRaw[0].data.questions;
 
-const base = import.meta.env.BASE_URL;
-
 const ERA_COLORS: Record<string, string> = {
   'birth-of-mobile-cpus': '#22D3EE',
   'arm-revolution': '#34D399',
@@ -120,7 +118,7 @@ const ERA_CAPTIONS: Record<string, string> = {
                 {eraProcessors.map(proc => (
                   <li>
                     <a
-                      href={`${base}/s01g5/timeline#${proc.id}`}
+                      href={`/csarch2-virtual-exhibits/s01g5/timeline#${proc.id}`}
                       class="proc-card group flex flex-col gap-2 p-4 rounded-s01g5-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-s01g5-primary"
                       style={`--c:${c}; border:1px solid var(--border-subtle); background:var(--bg-surface);`}
                       aria-label={`View ${proc.name} in timeline`}
@@ -141,7 +139,7 @@ const ERA_CAPTIONS: Record<string, string> = {
             </div>
 
             <div class="sm:pl-[44px]">
-              <a href={`${base}/s01g5/timeline?era=${era.id}`} class="btn-primary" style="font-size:15px; padding:8px 18px;">
+              <a href={`/csarch2-virtual-exhibits/s01g5/timeline?era=${era.id}`} class="btn-primary" style="font-size:15px; padding:8px 18px;">
                 View in Timeline →
               </a>
             </div>
