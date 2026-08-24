@@ -6,8 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   integrations: [mdx(), react(), icon()],
-  site: 'https://jrgo7.github.io',
-  base: '/',
+  site: 'https://dlsu-archcraft.github.io',
+  base: '/csarch2-virtual-exhibits',
   vite: {
     plugins: [tailwindcss()],
   },

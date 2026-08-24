@@ -1,2 +1,2 @@
-:HL["/s02g7/_next/static/chunks/3qoktcyz8z3o2.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"simulator","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"baoV4pOBK9zrWbI25sHrM"}
+:HL["/csarch2-virtual-exhibits/s02g7/_next/static/chunks/3qoktcyz8z3o2.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"simulator","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"j6KkspsGYf1JzFmW5zVNA"}
