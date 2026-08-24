@@ -5,13 +5,26 @@ const { exhibit } = Astro.props;
 const { slug, section, group, title, authors, description, keywords, repo, url } =
   exhibit;
 
+// `slug` is a runtime prop, not literal source text, so tools/lib/add-base.mjs's
+// codemod (and its no-hardcoded-base.test.mjs regression guard) can never see
+// or fix a reference built from it - both only match literal slug text. The
+// base must be combined here by hand instead, same as
+// S01_Group2_FreeBSDLayout.astro's `basePath` pattern. The trailing slash is
+// stripped before concatenating: commit e55fdaf shipped a `//slug`
+// protocol-relative URL (browser-resolved as a HOST, not a site path) from
+// `${import.meta.env.BASE_URL}/${slug}` doubling up with BASE_URL's own
+// trailing slash - stripping it first (base becomes '' at a root `/` base)
+// avoids reintroducing that bug while still prefixing correctly at a
+// non-root base.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 ---
 
 <article class="card" id={slug}>
   <p class="card__tag">{section} &middot; Group {group}</p>
 
   <h3 class="card__title">
-    <a href=`/${slug}` target="_blank">
+    <a href=`${base}/${slug}` target="_blank">
       {title}<Icon name="ic:baseline-open-in-new" class="card__ico" />
     </a>
   </h3>
