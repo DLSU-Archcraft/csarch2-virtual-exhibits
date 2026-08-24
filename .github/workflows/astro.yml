@@ -4,20 +4,9 @@
 #
 name: Deploy Astro site to Pages
 
-# MANUAL FALLBACK ONLY - this does not run on its own.
-#
-# The site is moving to Render at a root domain in Phase 0b. This workflow is
-# kept so a Pages deploy can still be triggered deliberately, but the push
-# trigger is removed: the build step below overrides astro.config.mjs with
-# --base "${{ steps.pages.outputs.base_path }}", while the source tree now
-# writes root-relative paths (/s01g8/diagram.webp) that Astro emits verbatim.
-# Under a Pages base_path those paths lack the base segment and 404, so an
-# automatic publish on push to main would put a broken site live. Anyone
-# re-enabling `push:` must first give the tree that base segment - see
-# README 14, "Moving the site under a path".
-
 on:
-  # Manual only, from the Actions tab. See the note above before adding `push:`.
+  push:
+    branches: [main]
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -75,10 +64,7 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
         working-directory: ${{ env.BUILD_PATH }}
       - name: Build with Astro
-        run: |
-          ${{ steps.detect-package-manager.outputs.runner }} astro build \
-            --site "${{ steps.pages.outputs.origin }}" \
-            --base "${{ steps.pages.outputs.base_path }}"
+        run: ${{ steps.detect-package-manager.outputs.runner }} astro build
         working-directory: ${{ env.BUILD_PATH }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
