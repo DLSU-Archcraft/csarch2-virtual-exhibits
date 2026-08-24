@@ -15,6 +15,25 @@ const BOUNDARY = new Set([
   undefined, '/', '.', '?', '#', "'", '"', '`', ')', ' ', '\n', '\t', ',', ';', '}', ']',
 ]);
 
+// The mirror-image boundary check for what precedes the matched leading
+// '/'. A real root-relative reference starts at a quote, backtick, '(',
+// '=', whitespace, or the very start of the source — never mid-token. If
+// this isn't checked, a relative specifier like "../../assets/s04g2/x.webp"
+// or a content-collection glob like "./content/s01g5/eras" gets corrupted:
+// the algorithm finds the '/' right before the slug-shaped segment, sees a
+// valid slug + after-boundary, and has no signal that this '/' is actually
+// the Nth separator inside a longer relative path rather than the start of
+// a reference. The same missing check also makes the function
+// non-idempotent: re-run on its own output "/csarch2-virtual-exhibits/s01g1/..."
+// it would otherwise re-match the nested '/s01g1' and double-prefix it.
+// Deliberately excludes '/' itself — a '/' immediately before another '/'
+// is always a path separator inside a longer specifier here (there is no
+// scheme-less protocol-relative "//host/..." case in this codebase that
+// legitimately starts a reference), so treating it as a non-boundary is
+// strictly more conservative than the pre-existing scheme://host check
+// below, never less.
+const PRE_BOUNDARY = new Set([undefined, "'", '"', '`', '(', '=', ' ', '\n', '\t']);
+
 export function addBaseToSlugRefs(source, { slugs, base }) {
   const baseSegment = normalizeBase(base);
   if (!baseSegment) {
@@ -42,8 +61,9 @@ export function addBaseToSlugRefs(source, { slugs, base }) {
     const slug = sorted.find((s) => source.startsWith(s, at + 1));
     const after = slug ? at + 1 + slug.length : -1;
     const nextChar = slug ? source[after] : undefined;
+    const prevChar = source[at - 1];
 
-    if (!slug || !BOUNDARY.has(nextChar)) {
+    if (!slug || !BOUNDARY.has(nextChar) || !PRE_BOUNDARY.has(prevChar)) {
       text += source.slice(i, at + 1);
       i = at + 1;
       continue;

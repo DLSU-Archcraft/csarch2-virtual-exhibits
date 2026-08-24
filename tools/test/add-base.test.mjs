@@ -64,3 +64,31 @@ test('is a no-op on source with no slug references', () => {
 test('rejects an empty base — there is nothing to add a reference under', () => {
   assert.throws(() => addBaseToSlugRefs('"/s01g8"', { slugs: ['s01g8'], base: '' }), /base/i);
 });
+
+// Regression coverage for a real defect found while building Task 2's CLI
+// and applying it across src/: the boundary check only ever validated what
+// comes AFTER a matched slug, never what precedes the matched leading '/'.
+// That let it match inside relative import/glob specifiers that merely
+// happen to contain a slug-shaped path segment, corrupting them, and made
+// the function non-idempotent on its own already-correct output.
+
+test('does NOT match a slug-shaped segment inside a relative import specifier', () => {
+  const src = 'import X from "../../assets/s04g2/Discord_Logo.webp"';
+  const { text, changed } = addBaseToSlugRefs(src, { slugs: ['s04g2'], base: 'csarch2-virtual-exhibits' });
+  assert.equal(text, src);
+  assert.equal(changed, 0);
+});
+
+test('does NOT match a slug-shaped segment inside a content-collection glob path', () => {
+  const src = "'./src/content/s01g5/eras'";
+  const { text, changed } = addBaseToSlugRefs(src, { slugs: ['s01g5'], base: 'csarch2-virtual-exhibits' });
+  assert.equal(text, src);
+  assert.equal(changed, 0);
+});
+
+test('is idempotent — running it again on its own already-correct output is a no-op', () => {
+  const already = '"/csarch2-virtual-exhibits/s01g1/mail.webp"';
+  const { text, changed } = addBaseToSlugRefs(already, { slugs: ['s01g1'], base: 'csarch2-virtual-exhibits' });
+  assert.equal(text, already);
+  assert.equal(changed, 0);
+});
