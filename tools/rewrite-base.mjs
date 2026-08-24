@@ -1,13 +1,23 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, extname } from 'node:path';
-import { rewriteBaseRefs } from './lib/base-path.mjs';
-import { normalizeBase } from './integrate/rewrite.mjs';
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, extname } from "node:path";
+import { rewriteBaseRefs } from "./lib/base-path.mjs";
+import { normalizeBase } from "./integrate/rewrite.mjs";
 
 // Files whose base-path matches are ALL external URLs pointing at other
 // students' repositories and deployments. Never rewrite these.
-const EXCLUDE = new Set(['src/data/exhibits.json']);
+const EXCLUDE = new Set(["src/data/exhibits.json"]);
 
-const EXTENSIONS = new Set(['.astro', '.mdx', '.md', '.jsx', '.tsx', '.js', '.ts', '.css', '.json']);
+const EXTENSIONS = new Set([
+  ".astro",
+  ".mdx",
+  ".md",
+  ".jsx",
+  ".tsx",
+  ".js",
+  ".ts",
+  ".css",
+  ".json",
+]);
 
 function walk(dir) {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -26,10 +36,10 @@ export function rewriteTree(root, { from, to, dryRun, exclude = EXCLUDE }) {
   const fromSegment = normalizeBase(from);
 
   for (const file of walk(root)) {
-    if (exclude.has(file.split('\\').join('/'))) continue;
+    if (exclude.has(file.split("\\").join("/"))) continue;
     if (!EXTENSIONS.has(extname(file))) continue;
 
-    const before = readFileSync(file, 'utf8');
+    const before = readFileSync(file, "utf8");
     if (!before.includes(`/${fromSegment}`)) continue;
 
     const { text, changed } = rewriteBaseRefs(before, { from, to });
@@ -49,13 +59,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     return i === -1 ? fallback : args[i + 1];
   };
 
-  const from = get('--from', 'virtual-exhibit-template');
-  const to = get('--to', '');
-  const dryRun = args.includes('--dry-run');
+  const from = get("--from", "csarch2-virtual-exhibits");
+  const to = get("--to", "");
+  const dryRun = args.includes("--dry-run");
 
   let report;
   try {
-    report = rewriteTree('src', { from, to, dryRun });
+    report = rewriteTree("src", { from, to, dryRun });
   } catch (e) {
     // A rejected --from (see rewriteBaseRefs) is a usage error, not a crash.
     // Nothing has been written at this point: rewriteTree only writes after
@@ -68,5 +78,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   for (const { file, changed } of report) {
     console.log(`${String(changed).padStart(3)}  ${file}`);
   }
-  console.log(`\n${dryRun ? '[dry run] would rewrite' : 'rewrote'} ${total} references across ${report.length} files`);
+  console.log(
+    `\n${dryRun ? "[dry run] would rewrite" : "rewrote"} ${total} references across ${report.length} files`,
+  );
 }
