@@ -333,54 +333,106 @@ The source tree this was built from lives in the gitignored
 `.integration-src/` and carries local modifications that do **not** exist
 upstream — `src/lib/basePath.ts` plus nine call-site edits — so a fresh clone
 of `JoseBryanPerez/CSARCH2_Group_7` is *not* on its own sufficient to
-reproduce `public/s02g7/`; those changes have not yet been captured as a portable patch.
+reproduce `public/s02g7/`; those changes have not yet been captured
+as a portable patch.
 
 ## 14. The Base Path
 
-The site is served at `/csarch2-virtual-exhibits` (`base: '/csarch2-virtual-exhibits'` in `astro.config.mjs`), matching where GitHub Pages serves this project repo under the `DLSU-Archcraft` org. Never hardcode the base segment by hand in an exhibit — every internal reference already carries it, applied by `tools/add-base.mjs`.
+The site is served at `/csarch2-virtual-exhibits` (`base:
+'/csarch2-virtual-exhibits'` in `astro.config.mjs`), matching where
+GitHub Pages serves this project repo under the `DLSU-Archcraft` org.
+Never hardcode the base segment by hand in an exhibit — every
+internal reference already carries it, applied by
+`tools/add-base.mjs`.
 
-Do not build a path out of `import.meta.env.BASE_URL` either. `BASE_URL`
-is the base exactly as Astro normalized it, which at `base: '/'` is
-`"/"` — so ``href={`${baseUrl}/s01g8`}`` renders as `//s01g8`. That is a
-**protocol-relative** URL: the browser resolves `s01g8` as a *host name*
-and goes looking for `https://s01g8/`. Write the plain literal
-`href="/s01g8"` instead. `tools/check-links.mjs` now fails on any `//`
-reference whose first segment is not a real hostname.
+Most internal references in this codebase are not built at runtime
+at all — they are literal, root-relative strings that already carry
+the base segment (e.g. `/csarch2-virtual-exhibits/s01g8/foo.webp`),
+written into `src/` and kept correct by `tools/add-base.mjs`'s
+codemod. Prefer that literal form. Do not build the same path out of
+`import.meta.env.BASE_URL` when a literal will do — the codemod can
+only see literal slug text, so a path assembled at runtime is
+invisible to it.
+
+A few files have no choice: the reference is built from a value the
+codemod can never see as source text, such as a slug arriving as a
+prop rather than literal text. `src/components/ExhibitCard.astro` is
+the live example, and does this correctly. In files like it,
+`BASE_URL` is the base exactly as Astro normalized it, which at this
+project's `base: '/csarch2-virtual-exhibits'` is
+`"/csarch2-virtual-exhibits/"` — note the trailing slash. Naively
+writing ``href={`${import.meta.env.BASE_URL}/${slug}`}`` therefore
+renders a redundant `//` **mid-path**
+(`/csarch2-virtual-exhibits//s01g8`), not the scheme-relative
+`//s01g8` this project shipped back when the base was still root.
+That is still a real defect: a static host does not necessarily
+collapse the duplicate slash the way Node's `path.join` does, so the
+link can 404 in production — and `tools/check-links.mjs` will not
+reliably catch it either, since it only flags a `//` at the very
+start of a reference, and a mid-path duplicate resolves fine locally
+because `path.join` silently collapses it when comparing against
+`dist/`. Strip the trailing slash first, exactly as
+`ExhibitCard.astro` does — `import.meta.env.BASE_URL.replace(/\/$/,
+'')` — then build ``${base}/${slug}``.
 
 `tools/test/no-hardcoded-base.test.mjs` fails the build if a hardcoded
 base segment reappears.
 
 ### Moving the site under a path
 
-`tools/rewrite-base.mjs` swaps one base segment for another across
-`src/`, skipping the external URLs in `src/data/exhibits.json` and
+Two complementary tools handle the two directions a base change can
+go: renaming or removing an existing base, and adding one where
+there is none.
+
+`tools/rewrite-base.mjs` swaps one *existing* base segment for
+another across `src/` — or removes it, back to root, with `--to ''`
+— skipping the external URLs in `src/data/exhibits.json` and
 anywhere else the segment appears after a scheme-and-host:
 
-    node tools/rewrite-base.mjs --from csarch2 --to csarch3 --dry-run
-    node tools/rewrite-base.mjs --from csarch2 --to ''        # back to root
+    node tools/rewrite-base.mjs --from csarch2-virtual-exhibits --to csarch3-virtual-exhibits --dry-run
+    node tools/rewrite-base.mjs --from csarch2-virtual-exhibits --to ''   # back to root
 
-**It cannot add a base where there is none.** Moving *from* the current
-root base *to* a named one is not a one-command operation, and there is
-no flag that makes it one. The tool keys on the literal segment being
-replaced; at a root base there is no such segment, only a leading `/`
-that is indistinguishable from every other slash in the tree. `--from ''`
-used to be documented here and silently corrupted every path it touched
-(`/s01g8/diagram.webp` → `/csarch2s01g8/csarch2diagram.webp`); it is now
-rejected with an error.
+**It cannot add a base where there is none.** It keys on the literal
+segment being replaced; at a root base there is no such segment,
+only a leading `/` indistinguishable from every other slash in the
+tree. `--from ''` used to be documented here and silently corrupted
+every path it touched (`/s01g8/diagram.webp` →
+`/csarch2s01g8/csarch2diagram.webp`); it is now rejected with an
+error.
 
-If the site does need to move off root, the sequence is:
+`tools/add-base.mjs` is the complementary tool for that direction —
+root to a named base — which is how this site got its current
+`/csarch2-virtual-exhibits` base in the first place. With no literal
+segment to key on either, it keys on the known set of exhibit slugs
+from `exhibits.json` instead, prefixing every root-relative
+`/<slug>...` reference it finds under `src/`:
 
-1. Set `base: '/csarch2'` in `astro.config.mjs`. This fixes everything
+    node tools/add-base.mjs --base csarch2-virtual-exhibits --dry-run
+    node tools/add-base.mjs --base csarch2-virtual-exhibits
+
+It shares `rewrite-base.mjs`'s exclusion of `exhibits.json`'s
+external URLs, plus three files that combine the base with a slug
+*dynamically* at render time instead of as a literal string:
+`src/data/s02g9/rooms.ts`,
+`src/components/s01g2/S01_Group2_FreeBSDLayout.astro`, and
+`src/components/s01g8/Header.astro`. Codemod-prefixing a literal in
+those files would double the base the moment the dynamic
+concatenation ran — the same class of bug described above.
+
+With both tools available, moving the site to a different base — off
+root, between two named bases, or back to root — is one command plus
+a rebuild:
+
+1. Set the new `base:` in `astro.config.mjs`. This fixes everything
    Astro itself generates (bundled assets, `<link>`/`<script>` tags,
    `Astro.url`) but **not** the root-relative literals in exhibit
    markup, which Astro emits verbatim.
-2. Prefix those literals. There is no safe blanket rewrite — a
-   root-relative path in exhibit markup is not distinguishable from
-   other `/`-leading strings without knowing the slug set. The workable
-   form is per-slug and mechanical: for each of the 53 slugs, rewrite
-   `"/<slug>` to `"/csarch2/<slug>` in `src/` (again excluding
-   `src/data/exhibits.json`).
+2. Run `tools/add-base.mjs` (moving off root) or
+   `tools/rewrite-base.mjs` (renaming an existing base, or moving
+   back to root) to bring those literals in line.
 3. Rebuild and run `node tools/check-links.mjs`. It resolves every
-   internal `href`/`src` against the real `dist/`, so anything missed in
-   step 2 is reported rather than shipped.
+   internal `href`/`src` against the real `dist/`, base-aware per
+   the project's actual `base:` — a literal missed in step 2 is now
+   reported as missing the required base, not just as a generic dead
+   link.
 
