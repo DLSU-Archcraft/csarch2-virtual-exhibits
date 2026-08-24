@@ -11,8 +11,12 @@ export interface Props {
 const { title, description = 'Silicon Minds: The Evolution of the Mobile Microprocessor' } = Astro.props.frontmatter ?? Astro.props;
 const base = import.meta.env.BASE_URL;
 
-// Active nav detection
-const path = Astro.url.pathname.replace(base.replace(/\/$/, ''), '') || '/';
+// Active nav detection. `path` is compared against `navLinks[].href` below,
+// and those hrefs are base-inclusive literals (correctly left that way by
+// the base-path codemod), so `path` must stay base-inclusive too — do not
+// strip `base` back out here, or the comparison can never match once the
+// site's base is non-root.
+const path = Astro.url.pathname || '/';
 const isActive = (href: string) => {
   if (href === '/csarch2-virtual-exhibits/s01g5') return path === '/csarch2-virtual-exhibits/s01g5' || path === '/csarch2-virtual-exhibits/s01g5/';
   return path.startsWith(href);

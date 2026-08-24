@@ -7,15 +7,20 @@ import RedWaveBackground from "./freebsd/RedWaveBackground.astro";
 import '../../styles/s01g2/scroll-reveal.css';
 import '../../styles/s01g2/progress-tracker.css';
 
+// NOTE: these `path` values are deliberately bare (base-EXCLUSIVE), not
+// base-inclusive like the literal nav hrefs below. They feed `fullPath`
+// (below), which already combines them with `basePath` dynamically — see
+// tools/add-base.mjs's EXCLUDE set for why the codemod must never prefix
+// these.
 const exhibitPages = [
-  { path: '/csarch2-virtual-exhibits/s01g2', label: 'Home' },
-  { path: '/csarch2-virtual-exhibits/s01g2/info-page', label: 'What is FreeBSD?' },
-  { path: '/csarch2-virtual-exhibits/s01g2/history-page', label: 'History' },
-  { path: '/csarch2-virtual-exhibits/s01g2/freebsd-vs-linux', label: 'Compare' },
-  { path: '/csarch2-virtual-exhibits/s01g2/where-is-freebsd', label: 'Where Used' },
-  { path: '/csarch2-virtual-exhibits/s01g2/portsvspkg', label: 'Ports vs Pkg' },
-  { path: '/csarch2-virtual-exhibits/s01g2/cli', label: 'CLI' },
-  { path: '/csarch2-virtual-exhibits/s01g2/references', label: 'References' },
+  { path: '/s01g2', label: 'Home' },
+  { path: '/s01g2/info-page', label: 'What is FreeBSD?' },
+  { path: '/s01g2/history-page', label: 'History' },
+  { path: '/s01g2/freebsd-vs-linux', label: 'Compare' },
+  { path: '/s01g2/where-is-freebsd', label: 'Where Used' },
+  { path: '/s01g2/portsvspkg', label: 'Ports vs Pkg' },
+  { path: '/s01g2/cli', label: 'CLI' },
+  { path: '/s01g2/references', label: 'References' },
 ];
 
 const baseUrl = import.meta.env.BASE_URL;
@@ -47,7 +52,7 @@ const basePath = baseUrl.replace(/\/$/, '');
                     const fullPath = `${basePath}${page.path}`.replace(/\/\//g, '/');
                     return (
                         <div class="progress-step" data-page-path={fullPath}>
-                            <a href={page.path} class="progress-dot" data-label={page.label}></a>
+                            <a href={fullPath} class="progress-dot" data-label={page.label}></a>
                         </div>
                     );
                 })}

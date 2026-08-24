@@ -5,7 +5,21 @@ import { loadExhibits } from './lib/exhibits.mjs';
 
 // Same exclusion as tools/rewrite-base.mjs: every match in exhibits.json is
 // an external URL to another group's repo/deployment, never our own site.
-const EXCLUDE = new Set(['src/data/exhibits.json']);
+//
+// The three files below are excluded for a different reason: each already
+// combines a bare literal with `import.meta.env.BASE_URL` dynamically at
+// render/call time (an `assetPath()`-style helper, or an inline
+// `${baseUrl}/${literal}` concatenation). Codemod-prefixing the literal
+// corrupts that concatenation into a double-prefixed path/URL the moment
+// the site's `base` becomes non-root. This is the same bug class Phase 0a
+// already hit once, at src/data/s02g9/rooms.ts's assetPath() helper, during
+// the original root-ward base-path migration.
+const EXCLUDE = new Set([
+  'src/data/exhibits.json',
+  'src/data/s02g9/rooms.ts',
+  'src/components/s01g2/S01_Group2_FreeBSDLayout.astro',
+  'src/components/s01g8/Header.astro',
+]);
 
 const EXTENSIONS = new Set(['.astro', '.mdx', '.md', '.jsx', '.tsx', '.js', '.ts', '.css', '.json']);
 
