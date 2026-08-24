@@ -53,7 +53,7 @@ body:has(.xt-page) {
   --xt-active: #ffd93f;
   --xt-line: #2c5a22;
   --xt-ground: #6cc24a;
-  --xt-grass-header-bg: url('/s04g3/S04_Group3_images/grass-tile.webp');
+  --xt-grass-header-bg: url('/csarch2-virtual-exhibits/s04g3/S04_Group3_images/grass-tile.webp');
   --xt-grass-header-size: auto 100%;
   --xt-grass-header-pos: center bottom;
 

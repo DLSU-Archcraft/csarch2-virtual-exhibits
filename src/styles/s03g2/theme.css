@@ -16,7 +16,7 @@
  * and body copy stay on --font-mono. */
 @font-face {
   font-family: 'DS-Digital';
-  src: url('/s03g2/fonts/DS-DIGI.TTF') format('truetype');
+  src: url('/csarch2-virtual-exhibits/s03g2/fonts/DS-DIGI.TTF') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

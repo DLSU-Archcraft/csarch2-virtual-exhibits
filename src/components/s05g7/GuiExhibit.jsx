@@ -18,7 +18,7 @@ export default function MacGuiExhibit({ appleLogoSrc, eras }) {
     <div className="s05g7-main-container" style={themeToCssVars(active.theme)}>
       <header className="s05g7-header">
         <div className="s05g7-header-left">
-          <a href="/s05g7" aria-label="Return to Home" style={{ display:'flex', alignItems: 'center' }}>
+          <a href="/csarch2-virtual-exhibits/s05g7" aria-label="Return to Home" style={{ display:'flex', alignItems: 'center' }}>
             <img src={appleLogoSrc} alt="Apple Logo" className="s05g7-apple-logo-img" />
           </a>
           <div style={{ display: 'flex', flexDirection: 'column' }}>

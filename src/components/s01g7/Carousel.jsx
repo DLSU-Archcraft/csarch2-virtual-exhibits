@@ -10,11 +10,11 @@ const ICONS = {
 
 export default function Carousel({ baseUrl = '/' }) {
   const exhibits = [
-    { icon: ICONS.punch, label: 'Punch Card', title: 'THE ORIGIN:', sub: 'Punch Cards and Magnetic Drums', href: '/s01g7/origin' },
-    { icon: ICONS.hdd, label: 'HDD', title: 'THE DISK:', sub: 'Magnetic Storage and HDDs', href: '/s01g7/disk' },
-    { icon: ICONS.optical, label: 'Optical', title: 'THE OPTICAL AGE:', sub: 'CDs, DVDs, and Their Limits', href: '/s01g7/optical' },
-    { icon: ICONS.flash, label: 'SSD / NVMe', title: 'THE FLASH:', sub: 'SSDs, NAND, and NVMe', href: '/s01g7/flash' },
-    { icon: ICONS.horizon, label: 'Cloud / DNA', title: 'THE HORIZON:', sub: 'Cloud, DNA, and Emerging Storage', href: '/s01g7/horizon' },
+    { icon: ICONS.punch, label: 'Punch Card', title: 'THE ORIGIN:', sub: 'Punch Cards and Magnetic Drums', href: '/csarch2-virtual-exhibits/s01g7/origin' },
+    { icon: ICONS.hdd, label: 'HDD', title: 'THE DISK:', sub: 'Magnetic Storage and HDDs', href: '/csarch2-virtual-exhibits/s01g7/disk' },
+    { icon: ICONS.optical, label: 'Optical', title: 'THE OPTICAL AGE:', sub: 'CDs, DVDs, and Their Limits', href: '/csarch2-virtual-exhibits/s01g7/optical' },
+    { icon: ICONS.flash, label: 'SSD / NVMe', title: 'THE FLASH:', sub: 'SSDs, NAND, and NVMe', href: '/csarch2-virtual-exhibits/s01g7/flash' },
+    { icon: ICONS.horizon, label: 'Cloud / DNA', title: 'THE HORIZON:', sub: 'Cloud, DNA, and Emerging Storage', href: '/csarch2-virtual-exhibits/s01g7/horizon' },
   ];
 
   const [activeIndex, setActiveIndex] = useState(2);

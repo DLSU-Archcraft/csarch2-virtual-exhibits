@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 const SCREEN_RES = 48;
 // Static viewport box size on the page (no more shrinking/growing with zoom)
 const VIEWPORT_SIZE = 400;
-const IMAGE_SRC = '/s40g7/images/sample.webp';
+const IMAGE_SRC = '/csarch2-virtual-exhibits/s40g7/images/sample.webp';
 
 export default function TextureFilterDemo() {
   // Only 2 modes: Nearest and Bilinear

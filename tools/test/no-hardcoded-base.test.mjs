@@ -4,6 +4,8 @@ import { readFileSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { rewriteTree } from '../rewrite-base.mjs';
+import { addBaseToTree } from '../add-base.mjs';
+import { loadExhibits } from '../lib/exhibits.mjs';
 
 test('no source file hardcodes the old base path', () => {
   const report = rewriteTree('src', {
@@ -40,5 +42,15 @@ test('a file in the exclude set is skipped even when its reference IS rewritable
     report.map((r) => r.file),
     [join(dir, 'keep.json')],
     'the excluded file was reported, so the path guard is not doing its job',
+  );
+});
+
+test('no source file has a bare, un-prefixed slug reference', () => {
+  const slugs = loadExhibits().map((e) => e.slug);
+  const report = addBaseToTree('src', { slugs, base: 'csarch2-virtual-exhibits', dryRun: true });
+  assert.deepEqual(
+    report.map((r) => r.file),
+    [],
+    'these files have a bare slug reference that needs the base prefix; run: node tools/add-base.mjs --base csarch2-virtual-exhibits',
   );
 });

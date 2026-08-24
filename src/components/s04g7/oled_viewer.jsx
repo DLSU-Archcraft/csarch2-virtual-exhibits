@@ -365,7 +365,7 @@ export default function OledViewer() {
           
             <div className="oled-nav-header">
                 <div className="back-button-container">
-                    <a href="/s04g7" className="link-pill lower">
+                    <a href="/csarch2-virtual-exhibits/s04g7" className="link-pill lower">
                         ← Go Back
                     </a>
                 </div>

@@ -12,7 +12,7 @@ const SnoopingBus = () => {
         {/* LEFT - Broken Mirror */}
         <div className="bus-mirror">
           <img
-            src="/s40g1/Broken-Mirror.webp"
+            src="/csarch2-virtual-exhibits/s40g1/Broken-Mirror.webp"
             alt="Broken Mirror"
             className="mirror-image"
           />

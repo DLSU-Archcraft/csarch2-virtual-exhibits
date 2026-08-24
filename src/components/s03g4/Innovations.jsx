@@ -264,7 +264,7 @@ function Innovations() {
       
       <footer className="innovation-footer">
 
-        <a href="/s03g4/agc-homepage/"> Return to Homepage </a>
+        <a href="/csarch2-virtual-exhibits/s03g4/agc-homepage/"> Return to Homepage </a>
 
       </footer>
 
