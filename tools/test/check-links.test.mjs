@@ -188,3 +188,89 @@ test('a protocol-relative <script src> to a bare slug is reported', () => {
   assert.equal(ok, false);
   assert.match(errors[0], /protocol-relative/);
 });
+
+// --- base-aware resolution ---
+//
+// distDir is never physically nested under a `<base>/` folder - Astro
+// prefixes hrefs with `base` as a URL string only, it doesn't change where
+// pages are written on disk. Without stripping `base` first, every
+// correctly-prefixed reference (including ones Astro generates itself, like
+// its bundled CSS) looks dead against distDir, while a reference that is
+// MISSING the base can accidentally resolve anyway, by coincidence, and so
+// is silently missed. Both directions are covered below.
+
+test('with a base, a correctly base-prefixed link resolves', () => {
+  const d = dist({
+    'index.html': '<a href="/csarch2-virtual-exhibits/s01g8/">go</a>',
+    's01g8/index.html': '<html></html>',
+  });
+  assert.deepEqual(
+    checkLinks(d, { base: '/csarch2-virtual-exhibits' }).errors,
+    [],
+  );
+});
+
+test('with a base, an Astro-auto-generated asset href resolves after the base is stripped', () => {
+  const d = dist({
+    'index.html': '<link href="/csarch2-virtual-exhibits/_astro/app.BJZUgkGJ.css">',
+    '_astro/app.BJZUgkGJ.css': 'body{}',
+  });
+  assert.deepEqual(
+    checkLinks(d, { base: '/csarch2-virtual-exhibits' }).errors,
+    [],
+  );
+});
+
+test('with a base, a bare link to the base itself (the homepage) is not reported as dead', () => {
+  const d = dist({ 'index.html': '<a href="/csarch2-virtual-exhibits">home</a>' });
+  assert.deepEqual(
+    checkLinks(d, { base: '/csarch2-virtual-exhibits' }).errors,
+    [],
+  );
+});
+
+test('with a base, a link that is MISSING the base is reported as dead even though it happens to resolve on disk without it', () => {
+  // Regression: this is the exact false-negative the naive (non-base-aware)
+  // checker had - "/s01g8/" coincidentally resolves against a distDir that
+  // really does contain "s01g8/" at its own root, so a checker that just
+  // joins the href straight onto distDir sees it as fine. It is not fine on
+  // the real deployed site, where a root-relative href resolves against the
+  // domain root, not the project's own namespace.
+  const d = dist({
+    'index.html': '<a href="/s01g8/">go</a>',
+    's01g8/index.html': '<html></html>',
+  });
+  const { ok, errors } = checkLinks(d, { base: '/csarch2-virtual-exhibits' });
+  assert.equal(ok, false);
+  assert.match(errors[0], /missing required base/);
+  assert.match(errors[0], /\/s01g8\//);
+});
+
+test('with a base, a link that is double-prefixed with the base is still reported as dead', () => {
+  const d = dist({
+    'index.html':
+      '<a href="/csarch2-virtual-exhibits/csarch2-virtual-exhibits/s01g8/">go</a>',
+    's01g8/index.html': '<html></html>',
+  });
+  const { ok, errors } = checkLinks(d, { base: '/csarch2-virtual-exhibits' });
+  assert.equal(ok, false);
+  assert.match(errors[0], /dead link/);
+});
+
+test('base is normalized the same way regardless of leading/trailing slashes', () => {
+  const d = dist({
+    'index.html': '<a href="/csarch2-virtual-exhibits/s01g8/">go</a>',
+    's01g8/index.html': '<html></html>',
+  });
+  for (const base of ['csarch2-virtual-exhibits', 'csarch2-virtual-exhibits/', '/csarch2-virtual-exhibits/']) {
+    assert.deepEqual(checkLinks(d, { base }).errors, [], `base: ${JSON.stringify(base)}`);
+  }
+});
+
+test('omitting base preserves the original root-site behavior', () => {
+  const d = dist({
+    'index.html': '<a href="/s01g8/">go</a>',
+    's01g8/index.html': '<html></html>',
+  });
+  assert.deepEqual(checkLinks(d).errors, []);
+});

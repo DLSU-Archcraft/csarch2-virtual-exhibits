@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { normalizeBase } from './integrate/rewrite.mjs';
 
 // Every internal href/src in the built site must resolve to a file that exists.
 //
@@ -67,11 +68,39 @@ function collectRefs(html) {
   return refs;
 }
 
-export function checkLinks(distDir) {
+// The physical dist/ output is never nested under a `<base>/` subfolder -
+// Astro always builds pages at dist/s01g1/index.html regardless of `base`,
+// and prefixes every href/src it emits itself (bundled CSS/JS, optimized
+// images) with `base` purely as a URL string. On the real deployed site,
+// that `/<base>` prefix is resolved by GitHub Pages' own routing for a
+// project site; locally, it must be stripped before resolving against
+// distDir, or every correctly-prefixed reference in the site reports as a
+// false-positive dead link (distDir has no `<base>/` folder to find them
+// in), while a reference that is MISSING the base can accidentally still
+// resolve against distDir by coincidence (e.g. bare "/s03g3" against a
+// distDir that happens to contain "s03g3/" at its own root) and so is never
+// flagged at all - exactly the two failure modes this project hit the first
+// time `base` went non-root. `baseSegment` is normalized with the same
+// leading/trailing-slash handling used everywhere else in this codebase
+// (tools/integrate/rewrite.mjs's normalizeBase) so '/csarch2-virtual-exhibits',
+// 'csarch2-virtual-exhibits/', etc. are all treated the same.
+function stripBase(clean, baseSegment) {
+  if (!baseSegment) return { relPath: clean, missingBase: false };
+
+  const prefix = `/${baseSegment}`;
+  if (clean === prefix) return { relPath: '/', missingBase: false };
+  if (clean.startsWith(`${prefix}/`)) {
+    return { relPath: clean.slice(prefix.length), missingBase: false };
+  }
+  return { relPath: clean, missingBase: true };
+}
+
+export function checkLinks(distDir, { base = '' } = {}) {
   if (!existsSync(distDir)) {
     return { ok: false, errors: [`${distDir}: no such directory`] };
   }
 
+  const baseSegment = normalizeBase(base);
   const errors = [];
 
   for (const file of walk(distDir)) {
@@ -91,7 +120,16 @@ export function checkLinks(distDir) {
       const clean = raw.split('#')[0].split('?')[0];
       if (!clean || clean === '/') continue;
 
-      const target = join(distDir, clean);
+      const { relPath, missingBase } = stripBase(clean, baseSegment);
+      if (missingBase) {
+        errors.push(
+          `${file}: internal ref missing required base "/${baseSegment}": ${raw}`,
+        );
+        continue;
+      }
+      if (relPath === '/') continue;
+
+      const target = join(distDir, relPath);
       const ok =
         (existsSync(target) && statSync(target).isFile()) ||
         existsSync(join(target, 'index.html'));
@@ -104,7 +142,8 @@ export function checkLinks(distDir) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const { ok, errors } = checkLinks('dist');
+  const { default: config } = await import('../astro.config.mjs');
+  const { ok, errors } = checkLinks('dist', { base: config.base });
   for (const e of errors) console.error(`FAIL ${e}`);
   console.log(`${errors.length} dead links`);
   process.exit(ok ? 0 : 1);
