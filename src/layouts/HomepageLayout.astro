@@ -4,20 +4,13 @@ import '@fontsource-variable/lora';
 import '@fontsource-variable/noto-sans';
 import '../styles/global.css';
 import '../styles/homepage.css';
-
 import ExhibitCard from '../components/ExhibitCard.astro';
 import { buildGallery } from '../../tools/lib/gallery.mjs';
 import exhibits from '../data/exhibits.json';
 import rankings from '../data/rankings.json';
-
-const SECTION_NAMES = {
-  S01: 'Section S01', S02: 'Section S02', S03: 'Section S03',
-  S04: 'Section S04', S05: 'Section S05', S40: 'Section S40',
-};
-
 const { top, sections } = buildGallery(exhibits, rankings);
+const others = sections.flatMap((group) => group.exhibits);
 ---
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,32 +18,66 @@ const { top, sections } = buildGallery(exhibits, rankings);
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>CSARCH2 Virtual Exhibit</title>
     </head>
-
     <body>
         <hgroup class="titleheading">
-            <h1 class="title">ArchCities Virtual Exhibit</h1>
+            <div class="logos">
+                <img src="src/assets/ccs.jpg" class="icon"/>
+                <img src="src/assets/logo.png" class="logo"/>
+                <img src="src/assets/dlsu.png" class="icon"/>
+            </div>
+            <div class="subtitle" style="font-size: 1.6rem"><strong>A web exhibit of Computer Architecture topics</strong></div>
+            <div class="subtitle" style="margin-bottom: 2rem">Prof. R. L. Uy, J. R. Go, L. B. Marqueses, R. N. Tan, S. J. Claro, R. C. Campo
+                <br />
+                <strong>and the CSARCH2 students of Term 3, A.Y. 2025-2026</strong>
+            </div>
         </hgroup>
 
         <main class="judging">
-            <div class="section__head">
-                <h2 class="section__title">Top exhibits</h2>
+            <div class="tabs">
+                <button type="button" class="tabs__btn is-active" data-tab="top">Top exhibits</button>
+                <button type="button" class="tabs__btn" data-tab="others">Other Computer Architecture exhibits</button>
+                <input type="search" id="exhibit-search" class="tabs__search" placeholder="Search exhibits…" />
             </div>
-            <section class="section">
+            <section class="section" data-panel="top">
                 {top.map((exhibit) => <ExhibitCard exhibit={exhibit} />)}
             </section>
-
-            {sections.map((group) => (
-                <>
-                    <div class="section__head">
-                        <h2 class="section__title">{SECTION_NAMES[group.section] ?? group.section}</h2>
-                    </div>
-                    <section class="section">
-                        {group.exhibits.map((exhibit) => <ExhibitCard exhibit={exhibit} />)}
-                    </section>
-                </>
-            ))}
+            <section class="section" data-panel="others" hidden>
+                {others.map((exhibit) => <ExhibitCard exhibit={exhibit} />)}
+            </section>
         </main>
 
         <footer>CSARCH2 Virtual Exhibit &mdash; "Computer Architecture is Forever"</footer>
+
+        <style>
+            :global(body main.judging [hidden]) { display: none !important; }
+        </style>
+
+        <script is:inline>
+            document.addEventListener('DOMContentLoaded', () => {
+                const tabButtons = document.querySelectorAll('.tabs__btn');
+                const panels = document.querySelectorAll('.section[data-panel]');
+
+                tabButtons.forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        tabButtons.forEach((b) => b.classList.remove('is-active'));
+                        btn.classList.add('is-active');
+                        panels.forEach((p) => {
+                            p.hidden = p.dataset.panel !== btn.dataset.tab;
+                        });
+                    });
+                });
+
+                document.addEventListener('input', (e) => {
+                    if (!e.target.matches('#exhibit-search')) return;
+                    const query = e.target.value.trim().toLowerCase();
+                    panels.forEach((panel) => {
+                        Array.from(panel.children).forEach((card) => {
+                            const match = query.length === 0 || card.textContent.toLowerCase().includes(query);
+                            card.hidden = !match;
+                        });
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

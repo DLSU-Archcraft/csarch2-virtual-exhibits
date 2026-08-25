@@ -5,129 +5,197 @@
 */
 
 :root {
-    --accent: #5076a7;
-    --bg1: #e2e2e2;
-    --bg2: #ffffff;
-    --text: #1e1e1e;
-    --muted: #646464;
-    --border: #cecece;
-    --radius: 8px;
+  --accent: #5076a7;
+  --bg1: #e2e2e2;
+  --bg2: #ffffff;
+  --text: #1e1e1e;
+  --muted: #646464;
+  --border: #cecece;
+  --radius: 8px;
 
-    --small: 0.8rem;
+  --small: 0.8rem;
 }
 
 /* https://css-pattern.com/cubes-illusion/ */
 html {
-    --s: 200px; /* control the size*/
-    --c1: #2c2c2c;
-    --c2: #464148;
-    --c3: #3c3738;
+  --s: 200px; /* control the size*/
+  --c1: #2c2c2c;
+  --c2: #464148;
+  --c3: #3c3738;
 
-    background:
-        repeating-conic-gradient(from 30deg, #0000 0 120deg, var(--c3) 0 50%)
-            calc(var(--s) / 2) calc(var(--s) * tan(30deg) / 2),
-        repeating-conic-gradient(
-            from 30deg,
-            var(--c1) 0 60deg,
-            var(--c2) 0 120deg,
-            var(--c3) 0 50%
-        );
-    background-size: var(--s) calc(var(--s) * tan(30deg));
+  background:
+    repeating-conic-gradient(from 30deg, #0000 0 120deg, var(--c3) 0 50%)
+      calc(var(--s) / 2) calc(var(--s) * tan(30deg) / 2),
+    repeating-conic-gradient(
+      from 30deg,
+      var(--c1) 0 60deg,
+      var(--c2) 0 120deg,
+      var(--c3) 0 50%
+    );
+  background-size: var(--s) calc(var(--s) * tan(30deg));
 }
 
 body {
-    color: var(--text);
-    font-family: "Noto Sans Variable", sans-serif;
-    line-height: 1.5;
-    flex-direction: column;
-    display: flex;
-    min-height: 100vh;
+  color: var(--text);
+  font-family: "Noto Sans Variable", sans-serif;
+  line-height: 1.5;
+  flex-direction: column;
+  display: flex;
+  min-height: 100vh;
 }
 
 /* Top header bar */
 
+.titleheading {
+  padding-top: 40px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  background-color: #2f2f2f;
+  background-image:
+    linear-gradient(rgba(20, 20, 20, 0.3), rgba(40, 40, 40, 0.9)),
+    url("https://images.pexels.com/photos/1432673/pexels-photo-1432673.jpeg");
+  background-size: cover;
+  border-bottom: 2px solid white;
+}
+
+.logo {
+  width: 30%;
+  min-width: 300px;
+  text-align: center;
+}
+
+.logos {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tabs__btn {
+  color: var(--bg2);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.4rem 0.1rem;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.tabs__btn.is-active {
+  border-bottom-color: currentColor;
+  opacity: 1;
+  font-weight: bold;
+}
+
+.tabs__search {
+  margin-left: auto;
+  padding: 0.4rem 0.6rem;
+  box-shadow: 5px 5px;
+}
+
+.icon {
+  max-width: 80px;
+  width: 30%;
+}
+
 .title,
 .subtitle {
-    margin-bottom: 0;
-    color: var(--bg2);
-    text-align: center;
-    font-size: 3rem;
-    font-family: "Lora Variable";
-    text-shadow: 5px 5px 0px var(--text);
+  margin-bottom: 0;
+  color: var(--bg2);
+  text-align: center;
+  font-size: 3rem;
+  font-family: "Lora Variable";
+  text-shadow: 5px 5px 0px var(--text);
 }
 
 .subtitle {
-    font-size: 1rem;
-    margin-bottom: 2rem;
-    width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 0;
+  width: 100%;
+  text-shadow: 2px 2px 0px var(--text);
 }
 
 .header {
-    align-items: center;
-    justify-content: space-between;
-    color: var(--text);
-    display: flex;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text);
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
 }
 
 .header__titleblock {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .header__subtitle {
-    font-size: var(--small);
-    opacity: 0.8;
+  font-size: var(--small);
+  opacity: 0.8;
 }
 
 .button {
-    align-items: center;
-    background-color: var(--bg2);
-    border-radius: 100px;
-    border: 2px solid var(--border);
-    color: var(--text);
-    display: inline-flex;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    text-decoration: none;
-    transition: border-color 0.1s ease;
-    font-size: 1rem;
-    flex-shrink: 0;
+  align-items: center;
+  background-color: var(--bg2);
+  border-radius: 100px;
+  border: 2px solid var(--border);
+  color: var(--text);
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  text-decoration: none;
+  transition: border-color 0.1s ease;
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
 .button:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Main body */
 
 .content {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 1rem;
-    max-width: 100%;
-    margin: auto;
-    padding: 0 1.5rem;
-    flex: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1rem;
+  max-width: 100%;
+  margin: auto;
+  padding: 0 1.5rem;
+  flex: 1;
 }
 
 .content__block {
-    display: flex;
-    gap: 1rem;
-    flex-direction: column;
-    flex: 3;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  flex: 3;
 }
 
 .content__titlemeta {
-    text-align: center;
+  text-align: center;
 }
 
 .content__titlemeta h1 {
-    margin-top: 0;
-    font-family: "Lora Variable";
+  margin-top: 0;
+  font-family: "Lora Variable";
 }
 
 /* Main exhibit article content */
@@ -136,17 +204,17 @@ body {
 .article,
 .content__titlemeta,
 .exhibitlink {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 2rem;
-    box-shadow: 5px 5px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 5px 5px;
 }
 
 .header__titleblock {
-    flex: 1;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+  flex: 1;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .article h2,
@@ -154,67 +222,67 @@ body {
 .article h4,
 .article h5,
 .article h6 {
-    font-family: "Lora Variable";
-    border-bottom: 1px solid var(--border);
+  font-family: "Lora Variable";
+  border-bottom: 1px solid var(--border);
 }
 
 /* Table of contents */
 
 .toc {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    flex: 1;
-    height: fit-content; /* Prevents stretching */
-    padding: 2rem;
-    box-shadow: 5px 5px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  flex: 1;
+  height: fit-content; /* Prevents stretching */
+  padding: 2rem;
+  box-shadow: 5px 5px;
 }
 
 .padder {
-    box-shadow: none;
-    visibility: hidden;
+  box-shadow: none;
+  visibility: hidden;
 }
 
 .toc h2 {
-    border-bottom: 1px solid var(--border);
-    font-family: "Lora Variable";
-    margin-top: 0;
-    padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  font-family: "Lora Variable";
+  margin-top: 0;
+  padding-bottom: 0.5rem;
 }
 
 .toc__list {
-    list-style: decimal;
-    margin: 0;
-    padding-left: 1.5rem;
+  list-style: decimal;
+  margin: 0;
+  padding-left: 1.5rem;
 }
 
 .toc__item a {
-    color: var(--accent);
-    text-decoration-style: dotted;
+  color: var(--accent);
+  text-decoration-style: dotted;
 }
 
 .toc__item a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 footer {
-    text-align: center;
-    padding: 2rem;
-    font-size: var(--small);
-    background-color: var(--text);
-    color: var(--bg1);
-    margin-top: 4rem;
+  text-align: center;
+  padding: 2rem;
+  font-size: var(--small);
+  background-color: var(--text);
+  color: var(--bg1);
+  margin-top: 4rem;
 }
 
 @media (min-width: 1100px) {
-    .content {
-        max-width: 100%; /* Expanded width to easily fit both columns */
-        display: flex;
-        flex-direction: row;
-    }
+  .content {
+    max-width: 100%; /* Expanded width to easily fit both columns */
+    display: flex;
+    flex-direction: row;
+  }
 
-    .toc {
-        position: sticky;
-        top: 2rem; /* Gap between top of viewport and component during scroll */
-    }
+  .toc {
+    position: sticky;
+    top: 2rem; /* Gap between top of viewport and component during scroll */
+  }
 }

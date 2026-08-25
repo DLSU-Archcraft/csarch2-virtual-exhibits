@@ -39,9 +39,7 @@
       "Villorente, Khyle Raeka Baclagan"
     ],
     "description": "Explore the history, architecture, and ecosystem of FreeBSD through our interactive virtual exhibit. Through our exhibit, users can experience tracing FreeBSD system's evolution via a detailed timeline and explore its components through an interactive Venn diagram. The exhibit also features a simulated terminal as well as a software installation showcase that shows the mechanics of the Ports and Packages systems, giving users a practical look at what makes FreeBSD the powerful and unique operating system that it is.",
-    "keywords": [
-      "OS"
-    ],
+    "keywords": ["OS"],
     "repo": "https://github.com/notgian/freebsd-virtual-exhibit",
     "url": "https://notgian.github.io/freebsd-virtual-exhibit/freebsd/",
     "status": "live"
@@ -59,9 +57,7 @@
       "Xu, Kai Wen"
     ],
     "description": "Take a look at how Wi-Fi technology has evolved over the years.",
-    "keywords": [
-      "Wi-Fi"
-    ],
+    "keywords": ["Wi-Fi"],
     "repo": "https://github.com/mykanadine/WifiGeneration",
     "url": "https://mykanadine.github.io/WifiGeneration/wifi",
     "submittedUrl": "https://mykanadine.github.io/WifiGeneration/",
@@ -123,9 +119,7 @@
       "Pascual, Christine Jaica Pajarilla"
     ],
     "description": "The exhibit covers the evolution of Wi-Fi standards over the decades, from the original 802.11b in 1999 to the latest Wi-Fi 7. The exhibit aims to highlight how each generation of technology gradually improved its speed, range, and reliability in everyday environments.",
-    "keywords": [
-      "Wi-Fi"
-    ],
+    "keywords": ["Wi-Fi"],
     "repo": "https://github.com/pring-nt/virtual-exhibit-wifi-evolution",
     "url": "https://pring-nt.github.io/virtual-exhibit-wifi-evolution/wifi-evolution/",
     "status": "live"
@@ -143,9 +137,7 @@
       "Yamsuan, Rhian Claire Vivar"
     ],
     "description": "Full Capacity is a virtual, cyberpunk-archive-styled exhibit tracing the evolution of computer data storage -- from punch cards and magnetic drums to optical discs, flash memory, and emerging technologies like DNA storage. Across five interactive sections, visitors explore core computer architecture concepts such as data representation, access modes, memory hierarchy, and I/O performance through five hands-on simulators, including an HDD Read/Write Simulator and an SSD Speed Challenge.",
-    "keywords": [
-      "Data Storage"
-    ],
+    "keywords": ["Data Storage"],
     "repo": "https://github.com/skyparado/virtual-exhibit-template",
     "url": "https://skyparado.github.io/virtual-exhibit-template/S01_Group7_fullcapacity/",
     "status": "live"
@@ -159,9 +151,7 @@
       "BENDOL, Trisha Mae Roldan CAMATO, Karl Kristoffer Ricohermozo  DESCALZO, Alberto Miguel Tatel GREGORIO, John Marc Joepherl Meim MARTIN, Kurt Nehemiah Zacarias"
     ],
     "description": "Every frame rendered in a video game, every AI-generated image and every large language model relies on a technology that was originally designed for a much simpler purpose: drawing graphics faster. The Graphics Processing Unit (GPU) has undergone one of the most significant architectural transformations in computing history. What began as dedicated hardware for 3D graphics evolved into a massive computing platform that powers artificial intelligence, scientific simulations and modern super computers. This exhibit explores five major turning points that shaped the evolution of the GPU and examines how it became one of the most important technologies in modern computing.",
-    "keywords": [
-      "GPU"
-    ],
+    "keywords": ["GPU"],
     "repo": "https://github.com/K-K-R-C/CSARCH2-G8-GPU-WARS-FORKED-",
     "url": "https://k-k-r-c.github.io/CSARCH2-G8-GPU-WARS-FORKED-/01-main",
     "submittedUrl": "https://k-k-r-c.github.io/CSARCH2-G8-GPU-WARS-FORKED-/",
@@ -209,12 +199,7 @@
       "Panaligan, Louis Raphael"
     ],
     "description": "The evolution of computer architecture is defined by radical advancements in physical scale, reliability, and standardization. This case study traces the technological journey of computing systems as they transitioned from massive, room-sized vacuum tube mainframes to highly integrated silicon microprocessors. By examining three foundational milestones, we explore how these historical hardware paradigm shifts permanently reshaped the modern digital landscape.",
-    "keywords": [
-      "Microprocessors",
-      "Vaccum Tube",
-      "Transistor",
-      "CPU"
-    ],
+    "keywords": ["Microprocessors", "Vaccum Tube", "Transistor", "CPU"],
     "repo": "https://github.com/seoyunnie/ARCH2-Mainframes-to-Microprocessors",
     "url": "https://seoyunnie.github.io/ARCH2-Mainframes-to-Microprocessors/main-to-micro/",
     "status": "live"
@@ -257,9 +242,7 @@
       "Diego, Miguel"
     ],
     "description": "A timeline of every iteration of windows starting from Windows 1.0 all the way to Windows 11",
-    "keywords": [
-      "Windows OS"
-    ],
+    "keywords": ["Windows OS"],
     "repo": "https://github.com/pyxlaria/CSARCH2-Virtual-Exhibit-Group-3",
     "url": "https://pyxlaria.github.io/CSARCH2-Virtual-Exhibit-Group-3/",
     "status": "live"
@@ -277,9 +260,7 @@
       "Solomon, Adonis Mikel"
     ],
     "description": "Journey into the visual evolution of computer graphics. Explore an interactive timeline from ASCII to modern graphics, play with the defining tech of every era, and discover the breakthroughs that built our digital world.",
-    "keywords": [
-      "Graphics"
-    ],
+    "keywords": ["Graphics"],
     "repo": "https://github.com/kimsajaang/case-study-project-grp-4-csarch2/tree/deployment-v2",
     "url": "https://kimsajaang.github.io/virtual-exhibit-template/S02_Group4_exhibit/",
     "status": "live"
@@ -297,9 +278,7 @@
       "Jarilla, Roman Jederich E."
     ],
     "description": "An interactive journey through time and the evolution of gaming, following how simple hardwired arcade circuits developed into the powerful processors, immersive 3D worlds, instantaneous storage, ray tracing and enhanced graphics of today. Take a peek and walk across six generations that reveal that behind every pixel lies a remarkable and rich history of computer architecture pushing the boundaries and imagination beyond hardware limits of its time.",
-    "keywords": [
-      "RAM"
-    ],
+    "keywords": ["RAM"],
     "repo": "https://github.com/margz05/CSARCH2-S02-Group5",
     "url": "https://margz05.github.io/CSARCH2-S02-Group5",
     "status": "live"
@@ -317,9 +296,7 @@
       "Meija, Diego C."
     ],
     "description": "This exhibit delves into the history and evolution of computing technology in the Philippines, tracing its journey from its early beginnings to the present day. Through an interactive timeline and map, visitors will discover the key milestones, organizations, and technological advancements that contributed to the growth of the Philippine technology sector. After reviewing the interactive map, visitors can then take a challenge quiz to test their knowledge.",
-    "keywords": [
-      "History"
-    ],
+    "keywords": ["History"],
     "repo": "https://github.com/gabe-0017/CSARCH2-Group-6",
     "url": "https://gabe-0017.github.io/CSARCH2-Group-6/",
     "submittedRepo": "https://github.com/gabe-0017/CSARCH2-Group-6.git",
@@ -338,9 +315,7 @@
       "Perez, Jose Bryan Lee"
     ],
     "description": "The exhibit focuses on the x86-64 NASM assembly language. It aims to inform the audience of the evolution of the x86-64 instruction set architecture (ISA), starting from key machines and their ISAs such as ENIAC, UNIVAC I, IBM 701, and CDC 6600, and how they all lead to the emergence of CISC and the invention of the x86-64 NASM AL. This will be done through an interactive presentation about the timeline leading up to the x86-64 NASM AL along with an interactive drag and drop simulation of how to program with an x86-64 NASM assembly language in SASM and simulates 8-bit, 16-bit, 32-bit and 64-bit registers.",
-    "keywords": [
-      "x86-64"
-    ],
+    "keywords": ["x86-64"],
     "repo": "https://github.com/JoseBryanPerez/CSARCH2_Group_7",
     "url": "https://csarch2-group-7.onrender.com/",
     "submittedRepo": "https://github.com/JoseBryanPerez/CSARCH2_Group_7.git",
@@ -384,11 +359,7 @@
       "Tamayo, Chelsea Nichole Chuyaco"
     ],
     "description": "Cipher to Silicon is a digital exhibit that explores the history of computing through the lens of cryptography, showing how the need to protect information drove the development of modern technology. Through interactive experiences and historical storytelling, it reveals the powerful connection between secrecy, innovation, and the rise of computing.",
-    "keywords": [
-      "Cryptography",
-      "Computing",
-      "History"
-    ],
+    "keywords": ["Cryptography", "Computing", "History"],
     "repo": "https://github.com/NathanJC2/CipherToSilicon",
     "url": "https://nathanjc2.github.io/CipherToSilicon/",
     "status": "live"
@@ -406,9 +377,7 @@
       "Wong, Allisha Kate Ubani"
     ],
     "description": "This virtual exhibit explores the Heartbleed Bug, one of the most critical cybersecurity vulnerabilities discovered in OpenSSL. It explains how the vulnerability worked, its impact on internet security, and the lessons learned from the incident. Through interactive elements and visual explanations, users can better understand the importance of secure software development and proper vulnerability management.",
-    "keywords": [
-      "Cybersecurity"
-    ],
+    "keywords": ["Cybersecurity"],
     "repo": "https://github.com/2ru17/virtual-exhibit-proj-2026-g1",
     "url": "https://2ru17.github.io/virtual-exhibit-proj-2026-g1/heartbleed",
     "submittedUrl": "https://2ru17.github.io/virtual-exhibit-proj-2026-g1/",
@@ -427,9 +396,7 @@
       "Suarez, Santino Jose Floresca"
     ],
     "description": "Fatal Conversion transforms the Ariane 5 Flight V88 catastrophe into an educational journey into computer architecture through the power of interactive elements. In 1996, a number that was not handled appropriately caused a $370 million rocket to crash 37 seconds after takeoff. This exhibit allows viewers to experience first-hand what happens when there is a number that does not fit within its designated parameters before they're ever handed the vocabulary to name it.",
-    "keywords": [
-      "integer overflow / binary code"
-    ],
+    "keywords": ["integer overflow / binary code"],
     "repo": "https://github.com/DREV-c/G2-S03-virtual-exhibit/tree/integration/final",
     "url": "https://drev-c.github.io/G2-S03-virtual-exhibit/ariane_5",
     "submittedUrl": "https://drev-c.github.io/G2-S03-virtual-exhibit/",
@@ -475,9 +442,7 @@
       "Sanidad, Christian Gabriel"
     ],
     "description": "Explore the Apollo Guidance Computer (AGC), the revolutionary 1960s computer that helped guide astronauts to the Moon. Discover how its innovative architecture, memory systems, and human-computer interaction shaped modern computing through an interactive virtual exhibit featuring its history, technological breakthroughs, and lasting impact.",
-    "keywords": [
-      "AGC"
-    ],
+    "keywords": ["AGC"],
     "repo": "https://github.com/chiramisu/S03-CSARCH2-G4-AGC",
     "url": "https://chiramisu.github.io/S03-CSARCH2-G4-AGC/apollo-guidance-computer/",
     "submittedUrl": "https://chiramisu.github.io/S03-CSARCH2-G4-AGC/",
@@ -520,12 +485,7 @@
       "Tee, John Lorens Sy"
     ],
     "description": "In the past, single-core CPUs ran programs sequentially until thermal limits capped their speeds around 2005, triggering the shift toward multicore CPUs. Through this simulation, together with detailed insights, you can directly visualize how physical thermal limits halted single-core clock speeds and why multi-core architectures became essential to powering the modern devices we rely on today.",
-    "keywords": [
-      "Core",
-      "Multicore",
-      "Processor",
-      "CPU"
-    ],
+    "keywords": ["Core", "Multicore", "Processor", "CPU"],
     "repo": "https://github.com/Kwimbowo/virtual-exhibit-67cores",
     "url": "https://kwimbowo.github.io/virtual-exhibit-67cores/multicore-processors",
     "submittedUrl": "https://kwimbowo.github.io/virtual-exhibit-67cores/",
@@ -543,9 +503,7 @@
       "Marcos, Alain Zuriel"
     ],
     "description": "Project Spectre will take you back to 2018, the moment Spectre and Meltdown shook the tech world to its core and redefined computer security. Step directly onto the chip floor to explore how modern processors accidentally traded hardware security for raw speed through speculative execution. Across three interactive simulators, you will expose hidden passwords via cache-timing side channels, play the role of a CPU balancing performance against cache-trace risks, and command a January 2018 incident response team scrambling to patch exposed infrastructure under a ticking clock. It’s an immersive, high-stakes dive into the ultimate computer architecture dilemma.",
-    "keywords": [
-      "Spectre"
-    ],
+    "keywords": ["Spectre"],
     "repo": "https://github.com/imnotneon-dev/CSARCH2-Virtual-Exhibit",
     "url": "https://imnotneon-dev.github.io/CSARCH2-Virtual-Exhibit/S03_Group7_spectre",
     "submittedDescription": "Project Spectre will take you back to 2018, the moment Spectre and Meltdown shook the tech world to its core and redefined computer security. Step directly onto the chip floor to explore how modern processors accidentally traded hardware security for raw speed through speculative execution. Across three interactive simulators, you will expose hidden passwords via cache-timing side channels, play the role of a CPU balancing performance against cache-trace risks, and command a January 2018 incident response team scrambling to patch exposed infrastructure under a ticking clock. It’s an immersive, high-stakes dive into the ultimate computer architecture dilemma.\n\nhttps://imnotneon-dev.github.io/CSARCH2-Virtual-Exhibit/",
@@ -565,9 +523,7 @@
       "Tanchiao, Manuel Carlos U."
     ],
     "description": "By 2015, the semiconductor industry faced a critical barrier: building larger monolithic processor dies had become too expensive and inefficient due to reticle size limits and manufacturing defects that could ruin an entire chip. AMD solved this challenge in 2017 with its Zen architecture and chiplet design, replacing one massive die with smaller, interconnected chiplets that improved manufacturing yields, reduced costs, and enabled higher core counts. This innovative architectural shift transformed AMD into an industry leader and sparked the chiplet revolution, with even Intel later adopting the same approach.",
-    "keywords": [
-      "Chiplet"
-    ],
+    "keywords": ["Chiplet"],
     "repo": "https://github.com/Kemo1006/CSARCH2-Chiplet-Revolution",
     "url": "https://kemo1006.github.io/CSARCH2-Chiplet-Revolution/chip-rev",
     "submittedUrl": "https://kemo1006.github.io/CSARCH2-Chiplet-Revolution/",
@@ -586,9 +542,7 @@
       "Sarroza, Mikael"
     ],
     "description": "This virtual exhibit explains how the Apollo Guidance Computer handled the Apollo 11 1202 program alarm during lunar descent. The alarm was caused by computer overload, but the system used priority-based scheduling to preserve critical guidance, navigation, and control tasks while delaying lower-priority work. Through a timeline, AGC architecture section, and interactive Mission Control simulation, the exhibit shows how processor workload, task prioritization, real-time execution, and fault recovery affected the GO or ABORT decision.",
-    "keywords": [
-      "Priority-Based Scheduling"
-    ],
+    "keywords": ["Priority-Based Scheduling"],
     "repo": "https://github.com/hsimingg/CSARCH2-G9-Exhibit",
     "url": "https://hsimingg.github.io/CSARCH2-G9-Exhibit/",
     "status": "live"
@@ -606,9 +560,7 @@
       "Young, Cedric Francis Sy"
     ],
     "description": "Ever wondered how a CPU adds numbers or performs logical operations? Inside the ALU lets visitors explore binary computing through interactive lessons, a hands-on 64-bit ALU simulator, carry-trace visualizations, and Ripple Carry and Carry Lookahead adder comparisons that demonstrate how the Arithmetic Logic Unit (ALU) performs arithmetic and logic operations inside a processor.",
-    "keywords": [
-      "Arithmetic Logic Unit (ALU)"
-    ],
+    "keywords": ["Arithmetic Logic Unit (ALU)"],
     "repo": "https://github.com/CSARCH2-GROUP1/CSARCH2-Virtual-Exhibit-Group-1",
     "url": "https://csarch2-group1.github.io/CSARCH2-Virtual-Exhibit-Group-1/S04_Group1",
     "submittedUrl": "https://csarch2-group1.github.io/CSARCH2-Virtual-Exhibit-Group-1/",
@@ -627,9 +579,7 @@
       "Yasumuro, Mariel Mendoza"
     ],
     "description": "Virtual Memory: How It Works is an immersive digital exhibit that reveals how computers fake having infinite, perfectly organized memory out of chaotic physical RAM. Featuring hands-on retro OS crash simulators, real-time 3D page allocation cubes, live MMU address signal pipelines, and interactive page table entry inspectors, this project turns complex hardware mechanics, such as TLB caching, demand paging, process isolation, and shared library deduplication, into an engaging, visual experience complete with interactive knowledge checkpoints.",
-    "keywords": [
-      "Virtual Memory"
-    ],
+    "keywords": ["Virtual Memory"],
     "repo": "https://github.com/Hase1202/virtual-exhibit-template",
     "url": "https://hase1202.github.io/virtual-exhibit-template/virtual-memory",
     "submittedUrl": "https://hase1202.github.io/virtual-exhibit-template/?fbclid=IwY2xjawS51_NleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAEwAAEeRWW4ZKnuZ9oDu7o43sgbREaTRyrwppVkuey8OBcZkgQL1vK6sB4W7cmFr1E_aem_7PKhIVTHdtHrlPpERcP_jA",
@@ -648,9 +598,7 @@
       "Patricio, Anne Beatriz"
     ],
     "description": "Experience the journey of an instruction by stepping inside a CPU reimagined as a bustling city, discovering how a single instruction moves through the Fetch, Decode, and Execute districts. This exhibit dives into that hidden layer to demonstrate the core concept of microprogramming. Explore step-by-step simulations or test your skills by playing the Control Unit yourself to keep the CPU running.",
-    "keywords": [
-      "Microprogramming"
-    ],
+    "keywords": ["Microprogramming"],
     "repo": "https://github.com/beepatricio/CSARCH2_VirtualExhibit",
     "url": "https://beepatricio.github.io/CSARCH2_VirtualExhibit/microprogramming/",
     "status": "live"
@@ -668,9 +616,7 @@
       "Teoxon, John Albert Rivera"
     ],
     "description": "This exhibit explores how bus arbitration decides which device gets control of the system bus when multiple devices request access at once, and lets you simulate Fixed Priority, Round-Robin, and Daisy Chain arbitration yourself.",
-    "keywords": [
-      "Bus"
-    ],
+    "keywords": ["Bus"],
     "repo": "https://github.com/kekekoby/CSARCH2_S04_G4",
     "url": "https://kekekoby.github.io/CSARCH2_S04_G4/",
     "status": "live"
@@ -688,10 +634,7 @@
       "Rebudiao, Daniel Christian Limbo"
     ],
     "description": "Welcome to Ca-Ching!, an interactive web-based simulator demonstrating the fundamental operations, architecture, mapping functions, replacement algorithms, and write policies of computer cache memory. The application features a real-time hardware visualization engine that models data retrieval between a simulated CPU, cache slots, and main memory. Users can interact with various architectural mapping engines such as direct-mapping, set-associative, and fully associative cache structures. Our exhibit page includes interactive components and visualizers simulating cache replacement algorithms, write policies, and edge cases such as thrashing and power outages. Additionally, the platform has a live telemetry system tracking hit rates and execution cycles, plus a progression system awarding experience points based on user efficiency. A toggleable override mode applies a high-contrast, data-centric terminal aesthetic to the entire user interface.",
-    "keywords": [
-      "Cache",
-      "Memory"
-    ],
+    "keywords": ["Cache", "Memory"],
     "repo": "https://github.com/gbrlgrg/arch2-virtual-exhibit-group5",
     "url": "https://gbrlgrg.github.io/arch2-virtual-exhibit-group5/cpu-cache-visualizer",
     "submittedUrl": "https://gbrlgrg.github.io/arch2-virtual-exhibit-group5/",
@@ -709,9 +652,7 @@
       "Omandac, Karl Deejay Quinones"
     ],
     "description": "Inside RAM - Computer Memory in Motion is an interactive exhibit that showcases the fundamentals of computer memory. This virtual exhibit leads visitors through the entire evolution of RAM, the working principle behind an internal datastream, and communication between CPU and RAM by using real-life examples like the Nintendo Switch. The exhibit not only includes high-end tech visuals but also has interactive simulators and a game-styled quiz that showcases complicated concepts in a clear and fun way.",
-    "keywords": [
-      "RAM"
-    ],
+    "keywords": ["RAM"],
     "repo": "https://github.com/dev-gabb-711/arch2-case-study-2",
     "url": "https://dev-gabb-711.github.io/arch2-case-study-2/S04-Group6-Inside-Ram",
     "submittedUrl": "https://dev-gabb-711.github.io/arch2-case-study-2/",
@@ -730,9 +671,7 @@
       "Tiu, Avram Nathaniel Paguntalan"
     ],
     "description": "An interactive educational platform designed to help users understand the different types of displays developed and how its components work together to deliver visuals to us. The platform covers key components such as why display screens were developed, the uses of each display type, and comparing them to each other.",
-    "keywords": [
-      "Display"
-    ],
+    "keywords": ["Display"],
     "repo": "https://github.com/20-ash/CSARCH2-virtual-exhibit",
     "url": "https://20-ash.github.io/CSARCH2-virtual-exhibit/displays",
     "submittedUrl": "https://20-ash.github.io/CSARCH2-virtual-exhibit/",
@@ -751,9 +690,7 @@
       "Tan, Paul Aiden Go"
     ],
     "description": "Every digital image undergoes a series of steps before it appears on a screen. This interactive exhibit emphasizes the process and shows the intricacies of image manipulation and storage. To uncover the procedure that each computer takes with image handling, visitors can upload an image, see how it is stored at the pixel level, and perform a number of image processing operations. At the end, they will gain insights about image processing, file types and storage.",
-    "keywords": [
-      "Image"
-    ],
+    "keywords": ["Image"],
     "repo": "https://github.com/PrinceMPS/virtual-exhibit-template",
     "url": "https://princemps.github.io/virtual-exhibit-template/digital_image_processing",
     "submittedUrl": "https://princemps.github.io/virtual-exhibit-template/",
@@ -772,9 +709,7 @@
       "Singson, Railey Cruz"
     ],
     "description": "This web application explores the inner workings of NAND flash memory through interactive diagrams centered on this topic. Users can visually navigate how data is stored using floating-gate transistors, observing how charge levels represent binary states, and how cells are organized into pages and blocks. The interactive diagram allows users to click and hover to learn more about the components and the organization of NAND flash memory, and also allows users to simulate operations on NAND flash cells such as reading, writing, and erasing, which provides users a simplified way to learn about how SSDs function.",
-    "keywords": [
-      "Flash Memory"
-    ],
+    "keywords": ["Flash Memory"],
     "repo": "https://github.com/pitowalosian/CSARCH2-ADEOS",
     "url": "https://pitowalosian.github.io/CSARCH2-ADEOS/ADEOS_Group9_flash-memory",
     "submittedUrl": "https://pitowalosian.github.io/CSARCH2-ADEOS/",
@@ -792,9 +727,7 @@
       "Wang, Shao Wei"
     ],
     "description": "Historical Cryptography: The Enigma Machine explores the World War II cipher device that revolutionized military encryption, demonstrating how its rotors, reflector, and plugboard worked together to create secure communications while highlighting its lasting impact on the history of cryptography.",
-    "keywords": [
-      "Enigma Machine"
-    ],
+    "keywords": ["Enigma Machine"],
     "repo": "https://github.com/shaocodes/virtual_exhibit_g1",
     "url": "https://shaocodes.github.io/virtual_exhibit_g1/the_enigma/",
     "submittedRepo": "https://github.com/shaocodes/virtual_exhibit_g1.git",
@@ -812,9 +745,7 @@
       "Ross, Isabella Althea"
     ],
     "description": "Our web gives tribute to the women inventors who have contributed greatly to the history of computer architecture.",
-    "keywords": [
-      "Computing"
-    ],
+    "keywords": ["Computing"],
     "repo": "https://github.com/oresamu/CSARCH2_Case-Study",
     "url": "https://oresamu.github.io/CSARCH2_Case-Study/",
     "submittedRepo": "https://github.com/oresamu/CSARCH2_Case-Study.git",
@@ -832,12 +763,7 @@
       "Zerna, Ronin P."
     ],
     "description": "The exhibit highlights early limitations in hardware and communication, leading to the development of more efficient data transmission methods such as packet switching and protocol layering. It also presents how ARPANET introduced decentralized networking, how TCP/IP enabled communication across different systems, and how the World Wide Web (WWW) improved accessibility through hypertext and browsers.",
-    "keywords": [
-      "ARPANET",
-      "WWW",
-      "DARPA",
-      "TCP/IP"
-    ],
+    "keywords": ["ARPANET", "WWW", "DARPA", "TCP/IP"],
     "repo": "https://github.com/HungryDavid/virtual-exhibit-template",
     "url": "https://hungrydavid.github.io/virtual-exhibit-template/The%20Internet%E2%80%99s%20birth%20%E2%80%93%20ARPANET%20to%20WWW/",
     "status": "live"
@@ -853,11 +779,7 @@
       "VILLAFLOR, HERSHEY ANN AÑABEZA"
     ],
     "description": "Mga Nanguna (\"Those Who Led\") is a virtual museum exhibit that tells the untold story of Filipino pioneers who shaped the digital world — often against all odds and despite being overlooked in global computing history.\n\nThis exhibit explores how Filipino engineers, educators, and innovators contributed to computing from the early days of silicon chips to the modern tech era, tracing their journey from local institutions to the global stage and back home again.",
-    "keywords": [
-      "Tech",
-      "Filipinos",
-      "Pioneer"
-    ],
+    "keywords": ["Tech", "Filipinos", "Pioneer"],
     "repo": "https://github.com/Oldcow25/Group4_CSARCH2_Computer-Architecture-are-Forever",
     "url": "https://oldcow25.github.io/Group4_CSARCH2_Computer-Architecture-are-Forever/",
     "status": "live"
@@ -875,9 +797,7 @@
       "Rebollos, Brent Prose, Baje"
     ],
     "description": "Deep Dive Apollo showcases how the Apollo Guidance Computer overcame extreme memory, processing, and reliability constraints to guide humanity to the Moon. Through technical storytelling, historical insights, animated visuals, and hands-on simulations, the project demonstrates how human ingenuity led to innovative computer architecture, uniquely fault-tolerant software, and human-machine collaboration, which transformed very limited hardware into a mission-critical system that helped make Apollo 11 possible.",
-    "keywords": [
-      "Apollo"
-    ],
+    "keywords": ["Apollo"],
     "repo": "https://github.com/sauv1gnon/csarch2-virtual-exhibit",
     "url": "https://sauv1gnon.github.io/csarch2-virtual-exhibit/deep-dive-apollo/",
     "status": "live"
@@ -895,9 +815,7 @@
       "Ruiz, Joseph Benjamin"
     ],
     "description": "ARM Chip Details and other history tidbits tying the decision to develop them.",
-    "keywords": [
-      "ARM"
-    ],
+    "keywords": ["ARM"],
     "repo": "https://github.com/miraiTee/ARCH2---VET-G6-S05-",
     "url": "https://miraitee.github.io/ARCH2---VET-G6-S05-/ARM-architecture/#arm1-gate-level-simulation",
     "status": "live"
@@ -915,11 +833,7 @@
       "Papa, Aidan Casey M."
     ],
     "description": "Navigate the history of the Apple Macintosh Computer, from its birth to current technology. The website details the evolution of the Mac's computing technology to address the corresponding era's needs. It showcases the different computers using images, and describes the upgrades made to their processors and computing.",
-    "keywords": [
-      "Apple",
-      "Macintosh",
-      "Mac"
-    ],
+    "keywords": ["Apple", "Macintosh", "Mac"],
     "repo": "https://github.com/Aidan-Papa/CSARCH2-Group-7",
     "url": "https://aidan-papa.github.io/CSARCH2-Group-7/macintosh/",
     "submittedRepo": "https://github.com/Aidan-Papa/CSARCH2-Group-7.git",
@@ -938,9 +852,7 @@
       "Valle, Jose Edgardo Tablan"
     ],
     "description": "Bytes of the Past is an interactive virtual exhibit that explores the evolution of computer storage devices, from punch cards and magnetic tape to hard drives, solid-state drives, and cloud storage. Through a historical timeline, 3D models, and informative comparisons, the exhibit shows how storage technology has become faster, smaller, more portable, and more reliable across generations.",
-    "keywords": [
-      "Storage"
-    ],
+    "keywords": ["Storage"],
     "repo": "https://github.com/festivities/CSARCH2-S05-Y2526T3_virtual-exhibit",
     "url": "https://festivities.github.io/CSARCH2-S05-Y2526T3_virtual-exhibit/",
     "status": "live"
@@ -982,9 +894,7 @@
       "Pallarca, Cedric S."
     ],
     "description": "An interactive educational exhibit that explains the MESI Cache Coherence Protocol through the world of American McGee's Alice. By controlling Classic Alice and Hysteria Alice as CPU cores connected through a Snooping Bus, users can visualize cache states, memory operations, and writeback in an engaging, story-driven simulation.",
-    "keywords": [
-      "Cache Coherence"
-    ],
+    "keywords": ["Cache Coherence"],
     "repo": "https://github.com/04leafcloverr/virtual-exhibit",
     "url": "https://04leafcloverr.github.io/virtual-exhibit/",
     "submittedRepo": "https://github.com/04leafcloverr/virtual-exhibit.git",
@@ -1002,9 +912,7 @@
       "Chua, Keion Clei"
     ],
     "description": "Clockwork: The Rhythm of the Processor is an interactive web-based simulator that demystifies the fundamental heartbeat of modern computing—the CPU clock cycle. Deployed on Vercel, this educational tool visualizes how a 5-stage RISC pipeline (Instruction Fetch, Decode, Execute, Memory Access, Write Back) processes instructions in real-time, allowing visitors to manipulate clock frequency from 0.5 GHz to 2.0 GHz and observe the cascading effects on instruction throughput and pipeline behavior. Through integrated oscilloscope waveforms, square wave frequency visualizations, and dynamic Gantt charts, Clockwork bridges the gap between abstract timing concepts and tangible hardware physics. Built with interactive controls and rich visual feedback, this simulator transforms computer architecture education from static diagrams into an engaging, hands-on exploration of the timing logic that orchestrates billions of operations per second.",
-    "keywords": [
-      "CPU Clock"
-    ],
+    "keywords": ["CPU Clock"],
     "repo": "https://github.com/chewsdaycat/CSARCH2_GRP2",
     "url": "https://clock-cycles.vercel.app/",
     "status": "live"
@@ -1022,9 +930,7 @@
       "Viray, Jarick Klein Lacsamana"
     ],
     "description": "Ever wondered how a drawing tablet knows exactly where your pen is and how hard you're pressing? This exhibit breaks the magic into three stages of computer architecture: the digitizer matrix that tracks the pen's position, the 13-bit ADC that quantizes pressure into 8,192 levels, and the hardware interrupts that rush every stroke to the CPU. Try the interactive simulator: draw on a virtual tablet and watch the sensing wires illuminate, the registers update, and the interrupt counter climb in real time.",
-    "keywords": [
-      "Digitizer"
-    ],
+    "keywords": ["Digitizer"],
     "repo": "https://github.com/Enzo-user/virtual-exhibit-template",
     "url": "https://enzo-user.github.io/virtual-exhibit-template/drawing-tablet/",
     "status": "live"
@@ -1033,7 +939,7 @@
     "section": "S40",
     "group": 4,
     "slug": "s40g4",
-    "title": "[Group 4] FDE Exhibit",
+    "title": "FDE Exhibit",
     "authors": [
       "Ferrer, Angel June Escote",
       "Kabiling, Simon Mabriel Madamba",
@@ -1041,13 +947,7 @@
       "Malicsi, Atreuz Patrick Cuapiaco"
     ],
     "description": "The exhibit demonstrates to users how a computer processes instructions through the Fetch-Decode-Execute cycle. Built on Astro and React, the site guides users through complex computer architecture concepts using hands-on activities. Users can match everyday analogies to CPU operations, interact with an animated block diagram to see live data flows, and solve puzzle-style routing challenges to execute simple code. By breaking down the specific roles of internal components like the Control Unit, ALU, and registers step-by-step, the exhibit makes abstract hardware mechanics easy to follow. The entire goal of the project is to have a responsive yet aesthetic site with thoughtfully paced educational design to turn a highly technical subject into an accessible and engaging learning experience.",
-    "keywords": [
-      "CPU",
-      "INSTRUCTION",
-      "ARCHITECTURE",
-      "CYCLE",
-      "INTERACTIVE"
-    ],
+    "keywords": ["CPU", "INSTRUCTION", "ARCHITECTURE", "CYCLE", "INTERACTIVE"],
     "repo": "https://github.com/Michael-Maglente/-CSARCH2-Group-2",
     "url": "https://csarch-2-g4-s40.netlify.app/",
     "status": "live"
@@ -1065,9 +965,7 @@
       "Rogacion, Rob Nigel"
     ],
     "description": "Cloud Storage Architecture is an interactive website that helps users simply learn about computer architecture. It includes a topic about cloud storage and explains how technology works behind the systems we use every day through clear information and an interactive recap. Moreover, there is a short quiz to improve user understanding.",
-    "keywords": [
-      "Cloud"
-    ],
+    "keywords": ["Cloud"],
     "repo": "https://github.com/robnigel0313/CSARCH2-G5-S40-Virtual-Exhibit",
     "url": "https://robnigel0313.github.io/CSARCH2-G5-S40-Virtual-Exhibit/",
     "status": "live"
@@ -1081,9 +979,7 @@
       "DOMINGO, Stefan Manuel Gonzales ESCANO, Ewan Rafael Aguiman GAMILLA, Martin James GARCIA JR., Frederick Voltair Rico GUTIERREZ, Hanz Gabriel Antonio"
     ],
     "description": "An in-depth guide to understanding USB-C technology. We explore the inner workings of its 24-pin design, compare its capabilities to legacy standards, and unpack the hardware advancements that make it the modern standard for data and power delivery. You can also test your mastery with four interactive quizzes, including multiple-choice questions, true-or-false challenges, a pin-selection exercise, and a drag-and-drop feature comparison.",
-    "keywords": [
-      "USB-C"
-    ],
+    "keywords": ["USB-C"],
     "repo": "https://github.com/TheNinjaDude12/virtual-exhibit-template",
     "url": "https://virtual-exhibit-template.onrender.com/usb",
     "status": "live"
@@ -1101,11 +997,7 @@
       "Gutierrez, Michael Luis J."
     ],
     "description": "How GPU Texture Filters Work: Nearest Neighbor vs. Bilinear Filtering is an interactive virtual exhibit that demystifies the GPU's texture filtering pipeline. Through a magnifier slider, live console, and toggle switch, users explore how the Texture Mapping Unit (TMU) samples texels from cache and VRAM to produce pixel-perfect results. By comparing Nearest Neighbor's raw speed against Bilinear's smooth blending, visitors gain an intuitive understanding of the trade-off between performance and visual quality, a core principle of modern computer architecture.",
-    "keywords": [
-      "GPU",
-      "Texture Filtering",
-      "Texel"
-    ],
+    "keywords": ["GPU", "Texture Filtering", "Texel"],
     "repo": "https://github.com/cath-felix/CSARCH2-Case-Project",
     "url": "https://csarch-2-case-project.vercel.app",
     "submittedRepo": "https://github.com/cath-felix/CSARCH2-Case-Project.git",
@@ -1124,9 +1016,7 @@
       "WILLIE, EDSON JOHN, GARROVILLO"
     ],
     "description": "A deep-dive into the intricacies of a Solid State Drive (SSD), covering its advantages compared to a regular Hard Disk Drive (HDD), and the internals of an SSD and how they function in writing and storing data.",
-    "keywords": [
-      "SSD"
-    ],
+    "keywords": ["SSD"],
     "repo": "https://github.com/trem4ngo/virtual-exhibit-grp8",
     "url": "https://trem4ngo.github.io/virtual-exhibit-grp8/",
     "status": "live"

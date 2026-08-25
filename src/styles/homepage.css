@@ -40,10 +40,26 @@
   border-radius: var(--radius);
   box-shadow: 5px 5px;
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  gap: 30px;
   padding: 1.5rem;
   scroll-margin-top: 2rem;
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  scroll-margin-top: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.card__snapshot {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: var(--radius);
 }
 
 .card__tag {
