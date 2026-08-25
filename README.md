@@ -1,9 +1,10 @@
 # CSARCH2 Virtual Exhibit Guide
-[![Node.js](https://img.shields.io/badge/Node.js%2026-6DA55F?logo=node.js&logoColor=white)](#) [![Astro](https://img.shields.io/badge/Astro%206-BC52EE?logo=astro&logoColor=fff)](#) [![MDX](https://img.shields.io/badge/MDX-1B1F24?logo=mdx&logoColor=fff)](#) [![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#)
 
+[![Node.js](https://img.shields.io/badge/Node.js%2026-6DA55F?logo=node.js&logoColor=white)](#) [![Astro](https://img.shields.io/badge/Astro%206-BC52EE?logo=astro&logoColor=fff)](#) [![MDX](https://img.shields.io/badge/MDX-1B1F24?logo=mdx&logoColor=fff)](#) [![React](https://img.shields.io/badge/React-%2320232a.svg?logo=react&logoColor=%2361DAFB)](#)
 
 ## Table of Contents
 
+- [Social Features API](#social-features-api)
 - [Setup Guide](#setup-guide)
   - [1. Template Overview](#1-template-overview)
   - [2. Getting Started](#2-getting-started)
@@ -24,6 +25,82 @@
 
 ---
 
+# Social Features API
+
+Base URL (deployed):
+
+```
+https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev
+```
+
+All authenticated requests need the session cookie attached. From a
+browser: `fetch(url, { credentials: 'include' })`. From curl: pass
+`-H "Cookie: session=..."` (grab the value from devtools after logging in).
+
+`:slug` is derived, not stored: `lower(section + "g" + group)`, e.g.
+section `S01` + group `4` → `s01g4`.
+
+## Auth
+
+| Method | Path                    | Auth | Notes                                      |
+| ------ | ----------------------- | ---- | ------------------------------------------ |
+| GET    | `/auth/google/start`    | —    | Full-page redirect only, not `fetch`       |
+| GET    | `/auth/google/callback` | —    | Google redirects here; not called directly |
+| GET    | `/auth/me`              | —    | `{ user }` or `{ user: null }`             |
+| POST   | `/auth/logout`          | —    | Clears the session cookie                  |
+
+```bash
+curl -i https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev/auth/me
+```
+
+## Exhibits
+
+| Method | Path                           | Auth     | Notes                                     |
+| ------ | ------------------------------ | -------- | ----------------------------------------- |
+| GET    | `/api/exhibits/:slug`          | —        | `{ votes }`                               |
+| GET    | `/api/exhibits/:slug/comments` | —        | `{ comments: [...] }`                     |
+| POST   | `/api/exhibits/:slug/comments` | required | Body `{ comment }`, returns `{ comment }` |
+| GET    | `/api/exhibits/:slug/likes`    | —        | `{ count, liked }`                        |
+| POST   | `/api/exhibits/:slug/likes`    | required | Toggles like, returns `{ liked, count }`  |
+
+### Examples
+
+```bash
+# Votes
+curl -i https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev/api/exhibits/s01g4
+
+# Comments (public read)
+curl -i https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev/api/exhibits/s01g4/comments
+
+# Likes (public read)
+curl -i https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev/api/exhibits/s01g4/likes
+
+# Comment (requires login)
+curl -i -X POST https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev/api/exhibits/s01g4/comments \
+  -H "Cookie: session=PASTE_VALUE_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{"comment":"test comment"}'
+
+# Like/unlike toggle (requires login)
+curl -i -X POST https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev/api/exhibits/s01g4/likes \
+  -H "Cookie: session=PASTE_VALUE_HERE"
+```
+
+## Errors
+
+All errors are JSON: `{ "error": "message" }`. A `401` means not logged
+in — treat it as "prompt sign-in," not a generic failure.
+
+## Known limitations
+
+- Comments return the commenter's `email`, not a display name (the
+  `users` table has no `name` column).
+- Session cookie is cross-site (GitHub Pages ↔ `workers.dev`) — some
+  browsers (Safari especially) may block it. See the main `README.md`
+  for the custom-domain fix planned for this.
+
+---
+
 # Setup Guide
 
 ## 1. Template Overview
@@ -33,32 +110,36 @@ This document is a guide on how to set up the template and use MDX with Astro.
 ---
 
 ## 2. Getting Started
+
 1. Fork the repository. In the top-right corner of the page, click the Fork button. Adjust your settings then create fork.
 
 2. Clone your forked repository:
+
 ```
 git clone https://github.com/jrgo7/your-forked-repository
 ```
 
 3. Install the dependencies:
+
 ```
 npm install
 ```
 
 4. Run the dev server:
+
 ```
 npm run dev
 ```
 
 ### Commands
 
-| Command | What it does |
-|---|---|
-| `npm run dev` | Dev server on `localhost:4321`. |
-| `npm run build` | Static build into `dist/`. |
-| `npm run preview` | Serve the built `dist/` locally. |
-| `npm test` | Unit tests for the tooling in `tools/`. |
-| `npm run verify` | The full gate: `npm test`, then `npm run build`, then `node tools/verify-site.mjs` (every exhibit in `exhibits.json` has a built route) and `node tools/check-links.mjs` (every internal `href`/`src` in `dist/` resolves). Run this before committing anything that touches `src/` or `tools/`. |
+| Command           | What it does                                                                                                                                                                                                                                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm run dev`     | Dev server on `localhost:4321`.                                                                                                                                                                                                                                                                  |
+| `npm run build`   | Static build into `dist/`.                                                                                                                                                                                                                                                                       |
+| `npm run preview` | Serve the built `dist/` locally.                                                                                                                                                                                                                                                                 |
+| `npm test`        | Unit tests for the tooling in `tools/`.                                                                                                                                                                                                                                                          |
+| `npm run verify`  | The full gate: `npm test`, then `npm run build`, then `node tools/verify-site.mjs` (every exhibit in `exhibits.json` has a built route) and `node tools/check-links.mjs` (every internal `href`/`src` in `dist/` resolves). Run this before committing anything that touches `src/` or `tools/`. |
 
 ---
 
@@ -79,12 +160,12 @@ npm run dev
         └── topic_name.mdx
 ```
 
-| Path | Description |
-|---|---|
-| `src/pages/` | Place your `.mdx` files here. Astro creates automatic routing from filenames. |
-| `src/components/` | Your custom React/Astro components. |
-| `src/layouts/ExhibitLayout.astro` | Shared layout to be used. Don't restructure it. |
-| `astro.config.mjs` | Already configured. Only modify if adding new integrations. |
+| Path                              | Description                                                                   |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| `src/pages/`                      | Place your `.mdx` files here. Astro creates automatic routing from filenames. |
+| `src/components/`                 | Your custom React/Astro components.                                           |
+| `src/layouts/ExhibitLayout.astro` | Shared layout to be used. Don't restructure it.                               |
+| `astro.config.mjs`                | Already configured. Only modify if adding new integrations.                   |
 
 ---
 
@@ -110,8 +191,6 @@ readingTime: "67 minutes"
 
 The frontmatter block is not rendered as content. Astro reads it to know which layout to use and what to put in the page's metadata.
 
-
-
 ---
 
 ## 5. Adding Components
@@ -119,6 +198,7 @@ The frontmatter block is not rendered as content. Astro reads it to know which l
 Astro components (`.astro`) are ideal for static content like section wrappers, info cards, and image galleries.
 
 Create `src/components/InfoCard.astro`:
+
 ```astro
 ---
 const { title, body } = Astro.props;
@@ -139,10 +219,14 @@ const { title, body } = Astro.props;
 ```
 
 Then use it in your `.mdx`:
-```mdx
-import InfoCard from '../components/InfoCard.astro';
 
-<InfoCard title="What is a buffer over-read?" body="It occurs when a program reads more data than was intended from a buffer." />
+```mdx
+import InfoCard from "../components/InfoCard.astro";
+
+<InfoCard
+  title="What is a buffer over-read?"
+  body="It occurs when a program reads more data than was intended from a buffer."
+/>
 ```
 
 ### 5.1 React Components
@@ -150,6 +234,7 @@ import InfoCard from '../components/InfoCard.astro';
 React components (`.jsx` or `.tsx`) are used for interactive elements like quizzes, simulations, and timelines. They run in the browser.
 
 1. Create your component in `src/components/` with a default export:
+
 ```jsx
 // src/components/MyComponent.jsx
 export default function MyComponent() {
@@ -158,19 +243,20 @@ export default function MyComponent() {
 ```
 
 2. Import and use it in your `.mdx`:
+
 ```mdx
-import MyComponent from '../components/MyComponent.jsx';
+import MyComponent from "../components/MyComponent.jsx";
 
 <MyComponent client:load />
 ```
 
 > **Note on `client:` directives:** By default, Astro renders React components as static HTML. Add a `client:` directive to make them interactive in the browser.
 >
-> | Directive | When it hydrates |
-> |---|---|
-> | `client:load` | Immediately on page load |
+> | Directive        | When it hydrates                     |
+> | ---------------- | ------------------------------------ |
+> | `client:load`    | Immediately on page load             |
 > | `client:visible` | When the component scrolls into view |
-> | `client:idle` | When the browser is idle |
+> | `client:idle`    | When the browser is idle             |
 
 ---
 
@@ -179,12 +265,14 @@ import MyComponent from '../components/MyComponent.jsx';
 ## 6. What is Astro and MDX?
 
 ### Astro
+
 - Astro is a modern web framework designed for building fast, content-focused websites.
 - Astro defaults to zero client-side JavaScript, making pages render faster.
 - Astro also supports multiple frameworks at once.
 - For more information: https://docs.astro.build/en/getting-started/
 
 ### MDX
+
 - MDX is a Markdown + JSX tool that lets you add interactive elements to your Markdown pages.
 - You can import components, create charts and diagrams, and build interactive elements using Markdown.
 - For more information: https://mdxjs.com/docs/
@@ -208,6 +296,7 @@ Place your `.mdx` files inside `src/pages/`. Astro will handle routing automatic
 Astro handles routing automatically once your `.mdx` file is in `src/pages/`.
 
 1. Run the server:
+
 ```
 npm run dev
 ```
@@ -231,14 +320,14 @@ is Section 01, Group 4; `s40g6` is Section 40, Group 6. The slug is the
 single namespace an exhibit owns everywhere in the tree. A given exhibit may
 own, depending on what it needs:
 
-| Path | Purpose |
-|---|---|
-| `src/pages/<slug>.mdx` (or `.astro`) | The exhibit's entry page — its route is `/<slug>/`. |
-| `src/pages/<slug>/` | The exhibit's sub-pages, if it has more than one (e.g. `src/pages/s01g8/03-before-gpus.mdx`). |
-| `src/components/<slug>/` | The exhibit's own Astro/React/TSX components, including a custom `Layout.astro` if it needs one instead of the shared layout. |
-| `src/assets/<slug>/` | The exhibit's build-time-imported images, models, and other media referenced from its components/pages. |
-| `src/styles/<slug>/` | The exhibit's own stylesheets, imported only from its own pages/components. |
-| `public/<slug>/` | The exhibit's runtime-fetched static assets (large media referenced by absolute URL rather than imported). |
+| Path                                 | Purpose                                                                                                                       |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `src/pages/<slug>.mdx` (or `.astro`) | The exhibit's entry page — its route is `/<slug>/`.                                                                           |
+| `src/pages/<slug>/`                  | The exhibit's sub-pages, if it has more than one (e.g. `src/pages/s01g8/03-before-gpus.mdx`).                                 |
+| `src/components/<slug>/`             | The exhibit's own Astro/React/TSX components, including a custom `Layout.astro` if it needs one instead of the shared layout. |
+| `src/assets/<slug>/`                 | The exhibit's build-time-imported images, models, and other media referenced from its components/pages.                       |
+| `src/styles/<slug>/`                 | The exhibit's own stylesheets, imported only from its own pages/components.                                                   |
+| `public/<slug>/`                     | The exhibit's runtime-fetched static assets (large media referenced by absolute URL rather than imported).                    |
 
 Nothing outside an exhibit's own `<slug>/` namespace should ever reference
 that exhibit's files, and an exhibit should never reach into another
@@ -332,7 +421,7 @@ deletions must be staged too. Verify with `node tools/check-links.mjs`.
 The source tree this was built from lives in the gitignored
 `.integration-src/` and carries local modifications that do **not** exist
 upstream — `src/lib/basePath.ts` plus nine call-site edits — so a fresh clone
-of `JoseBryanPerez/CSARCH2_Group_7` is *not* on its own sufficient to
+of `JoseBryanPerez/CSARCH2_Group_7` is _not_ on its own sufficient to
 reproduce `public/s02g7/`; those changes have not yet been captured
 as a portable patch.
 
@@ -373,7 +462,7 @@ start of a reference, and a mid-path duplicate resolves fine locally
 because `path.join` silently collapses it when comparing against
 `dist/`. Strip the trailing slash first, exactly as
 `ExhibitCard.astro` does — `import.meta.env.BASE_URL.replace(/\/$/,
-'')` — then build ``${base}/${slug}``.
+'')` — then build `${base}/${slug}`.
 
 `tools/test/no-hardcoded-base.test.mjs` fails the build if a hardcoded
 base segment reappears.
@@ -384,7 +473,7 @@ Two complementary tools handle the two directions a base change can
 go: renaming or removing an existing base, and adding one where
 there is none.
 
-`tools/rewrite-base.mjs` swaps one *existing* base segment for
+`tools/rewrite-base.mjs` swaps one _existing_ base segment for
 another across `src/` — or removes it, back to root, with `--to ''`
 — skipping the external URLs in `src/data/exhibits.json` and
 anywhere else the segment appears after a scheme-and-host:
@@ -412,7 +501,7 @@ from `exhibits.json` instead, prefixing every root-relative
 
 It shares `rewrite-base.mjs`'s exclusion of `exhibits.json`'s
 external URLs, plus three files that combine the base with a slug
-*dynamically* at render time instead of as a literal string:
+_dynamically_ at render time instead of as a literal string:
 `src/data/s02g9/rooms.ts`,
 `src/components/s01g2/S01_Group2_FreeBSDLayout.astro`, and
 `src/components/s01g8/Header.astro`. Codemod-prefixing a literal in
@@ -435,4 +524,3 @@ a rebuild:
    the project's actual `base:` — a literal missed in step 2 is now
    reported as missing the required base, not just as a generic dead
    link.
-
