@@ -61,6 +61,16 @@ body {
   border-bottom: 2px solid white;
 }
 
+.signin {
+  text-decoration: underline;
+  font-weight: bold;
+  color: var(--bg2);
+  padding: 5px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .logo {
   width: 30%;
   min-width: 300px;

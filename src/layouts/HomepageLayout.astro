@@ -8,6 +8,9 @@ import ExhibitCard from '../components/ExhibitCard.astro';
 import { buildGallery } from '../../tools/lib/gallery.mjs';
 import exhibits from '../data/exhibits.json';
 import rankings from '../data/rankings.json';
+import ccsLogo from '../assets/ccs.jpg';
+import siteLogo from '../assets/logo.png';
+import dlsuLogo from '../assets/dlsu.png';
 const { top, sections } = buildGallery(exhibits, rankings);
 const others = sections.flatMap((group) => group.exhibits);
 ---
@@ -21,9 +24,9 @@ const others = sections.flatMap((group) => group.exhibits);
     <body>
         <hgroup class="titleheading">
             <div class="logos">
-                <img src="src/assets/ccs.jpg" class="icon"/>
-                <img src="src/assets/logo.png" class="logo"/>
-                <img src="src/assets/dlsu.png" class="icon"/>
+                <img src={ccsLogo.src} class="icon"/>
+                <img src={siteLogo.src} class="logo"/>
+                <img src={dlsuLogo.src} class="icon"/>
             </div>
             <div class="subtitle" style="font-size: 1.6rem"><strong>A web exhibit of Computer Architecture topics</strong></div>
             <div class="subtitle" style="margin-bottom: 2rem">Prof. R. L. Uy, J. R. Go, L. B. Marqueses, R. N. Tan, S. J. Claro, R. C. Campo
@@ -31,6 +34,8 @@ const others = sections.flatMap((group) => group.exhibits);
                 <strong>and the CSARCH2 students of Term 3, A.Y. 2025-2026</strong>
             </div>
         </hgroup>
+
+        <div id="auth-status" class="auth-status"></div>
 
         <main class="judging">
             <div class="tabs">
@@ -50,10 +55,31 @@ const others = sections.flatMap((group) => group.exhibits);
 
         <style>
             :global(body main.judging [hidden]) { display: none !important; }
+            .auth-status { display: flex; justify-content: center; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-size: 0.95rem; }
+            .auth-status a, .auth-status button { padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid #ccc; background: #fff; cursor: pointer; font: inherit; text-decoration: none; color: inherit; }
+            .auth-status a:hover, .auth-status button:hover { background: #f0f0f0; }
         </style>
 
-        <script is:inline>
+        <script>
+            const API_BASE = 'https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev';
+
+            async function renderAuthStatus() {
+                const el = document.getElementById('auth-status');
+                const res = await fetch(`${API_BASE}/auth/me`, { credentials: 'include' });
+                const { user } = await res.json();
+                el.innerHTML = user
+                    ? `<span class="subtitle">Signed in as <strong>${user.email}</strong>. <a class="signin" id="signout-btn">Sign out</a></span>`
+                    : `<span class="subtitle"><a class="signin" href="${API_BASE}/auth/google/start">Sign in</a> to like and comment.</span>`;
+                if (user) {
+                    document.getElementById('signout-btn').addEventListener('click', async () => {
+                        await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
+                        renderAuthStatus();
+                    });
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', () => {
+                renderAuthStatus();
                 const tabButtons = document.querySelectorAll('.tabs__btn');
                 const panels = document.querySelectorAll('.section[data-panel]');
 
