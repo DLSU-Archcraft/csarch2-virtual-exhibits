@@ -5,6 +5,7 @@ import '@fontsource-variable/noto-sans';
 import '../styles/global.css';
 import '../styles/homepage.css';
 import ExhibitCard from '../components/ExhibitCard.astro';
+import ExhibitModal from '../components/ExhibitModal.astro';
 import { buildGallery } from '../../tools/lib/gallery.mjs';
 import exhibits from '../data/exhibits.json';
 import rankings from '../data/rankings.json';
@@ -24,9 +25,9 @@ const others = sections.flatMap((group) => group.exhibits);
     <body>
         <hgroup class="titleheading">
             <div class="logos">
-                <img src={ccsLogo.src} class="icon"/>
-                <img src={siteLogo.src} class="logo"/>
-                <img src={dlsuLogo.src} class="icon"/>
+                <img src={ccsLogo.src} class="icon" alt="CCS Logo"/>
+                <img src={siteLogo.src} class="logo" alt="Virtual Exhibit Logo"/>
+                <img src={dlsuLogo.src} class="icon" alt="DLSU Logo"/>
             </div>
             <div class="subtitle" style="font-size: 1.6rem"><strong>A web exhibit of Computer Architecture topics</strong></div>
             <div class="subtitle" style="margin-bottom: 2rem">Prof. R. L. Uy, J. R. Go, L. B. Marqueses, R. N. Tan, S. J. Claro, R. C. Campo
@@ -41,7 +42,7 @@ const others = sections.flatMap((group) => group.exhibits);
             <div class="tabs">
                 <button type="button" class="tabs__btn is-active" data-tab="top">Top exhibits</button>
                 <button type="button" class="tabs__btn" data-tab="others">Other Computer Architecture exhibits</button>
-                <input type="search" id="exhibit-search" class="tabs__search" placeholder="Search exhibits…" />
+                <input type="search" id="exhibit-search" class="tabs__search" placeholder="Search exhibits…" aria-label="Search exhibits" />
             </div>
             <section class="section" data-panel="top">
                 {top.map((exhibit) => <ExhibitCard exhibit={exhibit} />)}
@@ -50,6 +51,9 @@ const others = sections.flatMap((group) => group.exhibits);
                 {others.map((exhibit) => <ExhibitCard exhibit={exhibit} />)}
             </section>
         </main>
+
+        <!-- Themed Exhibit Details Modal -->
+        <ExhibitModal />
 
         <footer>CSARCH2 Virtual Exhibit &mdash; "Computer Architecture is Forever"</footer>
 
@@ -62,24 +66,298 @@ const others = sections.flatMap((group) => group.exhibits);
 
         <script>
             const API_BASE = 'https://csarch2-exhibits-api.csarch2-exhibits-api.workers.dev';
+            let currentUser = null;
+            let currentSlug = null;
+            let currentComments = [];
+            let sortNewest = true;
 
-            async function renderAuthStatus() {
+            // Authentication state
+            async function fetchUser() {
+                try {
+                    const res = await fetch(`${API_BASE}/auth/me`, { credentials: 'include' });
+                    const data = await res.json();
+                    currentUser = data.user || null;
+                } catch {
+                    currentUser = null;
+                }
+                renderAuthStatus();
+            }
+
+            function renderAuthStatus() {
                 const el = document.getElementById('auth-status');
-                const res = await fetch(`${API_BASE}/auth/me`, { credentials: 'include' });
-                const { user } = await res.json();
-                el.innerHTML = user
-                    ? `<span class="subtitle">Signed in as <strong>${user.email}</strong>. <a class="signin" id="signout-btn">Sign out</a></span>`
-                    : `<span class="subtitle"><a class="signin" href="${API_BASE}/auth/google/start">Sign in</a> to like and comment.</span>`;
-                if (user) {
-                    document.getElementById('signout-btn').addEventListener('click', async () => {
+                if (!el) return;
+                el.innerHTML = currentUser
+                    ? `<span class="subtitle">Signed in as <strong>${currentUser.email}</strong>. <a class="signin" id="signout-btn">Sign out</a></span>`
+                    : `<span class="subtitle"><a class="signin" href="${API_BASE}/auth/google/start">Sign in with DLSU</a> to star & comment.</span>`;
+                
+                const signoutBtn = document.getElementById('signout-btn');
+                if (signoutBtn) {
+                    signoutBtn.addEventListener('click', async () => {
                         await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
+                        currentUser = null;
                         renderAuthStatus();
+                        if (currentSlug) renderCommentForm();
                     });
                 }
             }
 
+            // Modal elements
+            const modal = document.getElementById('exhibit-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const closeBtn = document.getElementById('modal-close-btn');
+            const modalTitle = document.getElementById('modal-title');
+            const modalAuthors = document.getElementById('modal-authors');
+            const modalTags = document.getElementById('modal-tags');
+            const modalThumbnail = document.getElementById('modal-thumbnail');
+            const modalOpenLink = document.getElementById('modal-open-link');
+            const modalDesc = document.getElementById('modal-description');
+            const modalDescFade = document.getElementById('modal-desc-fade');
+            const modalDescToggle = document.getElementById('modal-desc-toggle');
+            const starBtn = document.getElementById('modal-star-btn');
+            const starCountEl = document.getElementById('modal-star-count');
+            const sortBtn = document.getElementById('modal-sort-btn');
+            const commentsCountEl = document.getElementById('modal-comments-count');
+            const commentsListEl = document.getElementById('modal-comments-list');
+            const commentsToggle = document.getElementById('modal-comments-toggle');
+            const commentFormContainer = document.getElementById('modal-comment-form-container');
+
+            function closeModal() {
+                if (modal) {
+                    modal.removeAttribute('open');
+                    document.body.style.overflow = '';
+                }
+                currentSlug = null;
+            }
+
+            function openModalForCard(card) {
+                const slug = card.dataset.slug;
+                const title = card.dataset.title;
+                const authors = JSON.parse(card.dataset.authors || '[]');
+                const keywords = JSON.parse(card.dataset.keywords || '[]');
+                const description = card.dataset.description || '';
+                const href = card.dataset.href;
+                const snapshot = card.dataset.snapshot;
+
+                currentSlug = slug;
+                modalTitle.textContent = title;
+                modalAuthors.textContent = authors.join(' · ');
+                modalOpenLink.setAttribute('href', href);
+                modalThumbnail.src = snapshot;
+                modalDesc.textContent = description;
+
+                // Tags
+                modalTags.innerHTML = keywords.map((k) => `<span class="chip">${k}</span>`).join('');
+
+                // Description collapse/expand reset
+                modalDesc.classList.remove('is-expanded');
+                modalDescToggle.textContent = 'Show More';
+                requestAnimationFrame(() => {
+                    if (modalDesc.scrollHeight <= modalDesc.clientHeight + 6) {
+                        modalDescToggle.style.display = 'none';
+                        modalDescFade.style.display = 'none';
+                    } else {
+                        modalDescToggle.style.display = 'block';
+                        modalDescFade.style.display = 'block';
+                    }
+                });
+
+                // Reset comments & likes display
+                starCountEl.textContent = '…';
+                starBtn.classList.remove('is-starred');
+                commentsCountEl.textContent = '(…)';
+                commentsListEl.innerHTML = '<p class="comments-empty">Loading comments…</p>';
+                commentsToggle.style.display = 'none';
+
+                renderCommentForm();
+                fetchLikes(slug);
+                fetchComments(slug);
+
+                modal.setAttribute('open', '');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function renderCommentForm() {
+                if (!commentFormContainer) return;
+                if (!currentUser) {
+                    commentFormContainer.innerHTML = `
+                        <div class="comment-auth-prompt">
+                            <a href="${API_BASE}/auth/google/start">Sign in with your DLSU account</a> to leave a comment.
+                        </div>
+                    `;
+                } else {
+                    commentFormContainer.innerHTML = `
+                        <form class="add-comment-box" id="comment-form">
+                            <textarea id="comment-input" placeholder="Add to the discussion…" required maxlength="1000"></textarea>
+                            <div class="add-comment-footer">
+                                <span class="comment-author-badge">Posting as ${currentUser.email}</span>
+                                <button type="submit" class="add-comment-btn" id="comment-submit-btn">Post</button>
+                            </div>
+                        </form>
+                    `;
+                    const form = document.getElementById('comment-form');
+                    form?.addEventListener('submit', handleAddComment);
+                }
+            }
+
+            async function fetchLikes(slug) {
+                try {
+                    const res = await fetch(`${API_BASE}/api/exhibits/${slug}/likes`, { credentials: 'include' });
+                    if (res.ok) {
+                        const { count, liked } = await res.json();
+                        starCountEl.textContent = count;
+                        starBtn.classList.toggle('is-starred', !!liked);
+                    }
+                } catch {
+                    starCountEl.textContent = '0';
+                }
+            }
+
+            async function handleToggleLike() {
+                if (!currentSlug) return;
+                if (!currentUser) {
+                    window.location.href = `${API_BASE}/auth/google/start`;
+                    return;
+                }
+                try {
+                    const res = await fetch(`${API_BASE}/api/exhibits/${currentSlug}/likes`, {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+                    if (res.ok) {
+                        const { count, liked } = await res.json();
+                        starCountEl.textContent = count;
+                        starBtn.classList.toggle('is-starred', liked);
+                    }
+                } catch (err) {
+                    console.error('Error toggling like:', err);
+                }
+            }
+
+            async function fetchComments(slug) {
+                try {
+                    const res = await fetch(`${API_BASE}/api/exhibits/${slug}/comments`, { credentials: 'include' });
+                    if (res.ok) {
+                        const data = await res.json();
+                        currentComments = data.comments || [];
+                        renderComments();
+                    }
+                } catch {
+                    currentComments = [];
+                    renderComments();
+                }
+            }
+
+            function renderComments() {
+                commentsCountEl.textContent = `(${currentComments.length})`;
+                if (currentComments.length === 0) {
+                    commentsListEl.innerHTML = '<p class="comments-empty">No comments yet. Be the first to leave one!</p>';
+                    commentsToggle.style.display = 'none';
+                    return;
+                }
+
+                const sorted = [...currentComments].sort((a, b) => {
+                    const dateA = new Date(a.created_at || 0);
+                    const dateB = new Date(b.created_at || 0);
+                    return sortNewest ? dateB - dateA : dateA - dateB;
+                });
+
+                commentsListEl.innerHTML = sorted.map((c) => {
+                    const formattedDate = c.created_at ? new Date(c.created_at).toLocaleString('en-US', {
+                        month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit'
+                    }) : '';
+                    return `
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <span class="comment-author">${c.email || 'Anonymous'}</span>
+                                <span class="comment-date">${formattedDate}</span>
+                            </div>
+                            <div class="comment-body">${c.comment || ''}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                requestAnimationFrame(() => {
+                    if (commentsListEl.scrollHeight > commentsListEl.clientHeight + 10) {
+                        commentsToggle.style.display = 'block';
+                    } else {
+                        commentsToggle.style.display = 'none';
+                    }
+                });
+            }
+
+            async function handleAddComment(e) {
+                e.preventDefault();
+                const input = document.getElementById('comment-input');
+                const submitBtn = document.getElementById('comment-submit-btn');
+                const commentText = input?.value.trim();
+                if (!commentText || !currentSlug) return;
+
+                if (submitBtn) submitBtn.disabled = true;
+                try {
+                    const res = await fetch(`${API_BASE}/api/exhibits/${currentSlug}/comments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ comment: commentText })
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        currentComments.unshift(data.comment || { email: currentUser.email, comment: commentText, created_at: new Date().toISOString() });
+                        input.value = '';
+                        renderComments();
+                    }
+                } catch (err) {
+                    console.error('Error posting comment:', err);
+                } finally {
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', () => {
-                renderAuthStatus();
+                fetchUser();
+
+                // Card Click Delegation to Open Modal
+                document.addEventListener('click', (e) => {
+                    const card = e.target.closest('.card');
+                    if (!card) return;
+                    if (e.target.closest('.card__repo')) return; // Allow repo link click
+                    openModalForCard(card);
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        const card = document.activeElement?.closest('.card');
+                        if (card && document.activeElement === card) {
+                            openModalForCard(card);
+                        }
+                    }
+                    if (e.key === 'Escape' && modal?.hasAttribute('open')) {
+                        closeModal();
+                    }
+                });
+
+                backdrop?.addEventListener('click', closeModal);
+                closeBtn?.addEventListener('click', closeModal);
+                starBtn?.addEventListener('click', handleToggleLike);
+
+                sortBtn?.addEventListener('click', () => {
+                    sortNewest = !sortNewest;
+                    sortBtn.textContent = sortNewest ? 'Sort: Newest first' : 'Sort: Oldest first';
+                    renderComments();
+                });
+
+                modalDescToggle?.addEventListener('click', () => {
+                    const isExpanded = modalDesc.classList.toggle('is-expanded');
+                    modalDescToggle.textContent = isExpanded ? 'Show Less' : 'Show More';
+                    if (modalDescFade) modalDescFade.style.display = isExpanded ? 'none' : 'block';
+                });
+
+                commentsToggle?.addEventListener('click', () => {
+                    const isExpanded = commentsListEl.classList.toggle('is-expanded');
+                    commentsToggle.textContent = isExpanded ? 'Show Less' : 'Show More';
+                });
+
+                // Tab switching & search filters
                 const tabButtons = document.querySelectorAll('.tabs__btn');
                 const panels = document.querySelectorAll('.section[data-panel]');
 

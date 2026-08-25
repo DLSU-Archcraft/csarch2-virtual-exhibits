@@ -1,0 +1,75 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<dialog id="exhibit-modal" class="modal-dialog">
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  
+  <div class="modal-card" id="modal-card">
+    <!-- Modal Top Bar -->
+    <div class="modal-top-bar">
+      <div class="modal-top-meta">
+        <span class="modal-badge">Exhibit Details</span>
+      </div>
+
+      <div class="modal-actions-bar">
+        <!-- Star / Like Button Pill -->
+        <button type="button" class="modal-star-pill" id="modal-star-btn" title="Star this exhibit" aria-label="Star this exhibit">
+          <svg class="star-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.63 22 9.24 16.5 14.14 18.18 21 12 17.27 5.82 21 7.5 14.14 2 9.24 8.91 8.63 12 2"></polygon>
+          </svg>
+          <span class="modal-star-count" id="modal-star-count">0</span>
+        </button>
+
+        <!-- Open Exhibit External Link -->
+        <a id="modal-open-link" class="modal-icon-btn" href="#" target="_blank" rel="noopener noreferrer" title="Open exhibit in new tab" aria-label="Open exhibit in new tab">
+          <Icon name="ic:baseline-open-in-new" />
+        </a>
+
+        <!-- Close Button -->
+        <button type="button" class="modal-icon-btn modal-close-btn" id="modal-close-btn" title="Close" aria-label="Close exhibit details">
+          <Icon name="ic:round-close" />
+        </button>
+      </div>
+    </div>
+
+    <!-- Header Content: Thumbnail + Info -->
+    <div class="modal-header-main">
+      <img id="modal-thumbnail" class="modal-thumbnail" src="" alt="Exhibit snapshot" loading="lazy" />
+
+      <div class="modal-header-info">
+        <h2 class="modal-title" id="modal-title"></h2>
+        <p class="modal-authors" id="modal-authors"></p>
+        <div class="modal-tags" id="modal-tags"></div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="description-wrap">
+      <p class="description" id="modal-description"></p>
+      <div class="fade" id="modal-desc-fade"></div>
+      <button type="button" class="show-more-btn" id="modal-desc-toggle">Show More</button>
+    </div>
+
+    <hr class="modal-divider" />
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+      <div class="comments-header">
+        <h3 class="comments-heading">
+          Discussion <span class="comments-count" id="modal-comments-count">(0)</span>
+        </h3>
+        <button type="button" class="sort-btn" id="modal-sort-btn">Sort: Newest first</button>
+      </div>
+
+      <!-- Add Comment Form or Auth Prompt -->
+      <div id="modal-comment-form-container"></div>
+
+      <!-- Comments List -->
+      <div class="comments-list" id="modal-comments-list">
+        <p class="comments-empty" id="modal-comments-empty">No comments yet. Be the first to leave one!</p>
+      </div>
+      <button type="button" class="show-more-btn" id="modal-comments-toggle" style="display: none;">Show More</button>
+    </div>
+  </div>
+</dialog>
