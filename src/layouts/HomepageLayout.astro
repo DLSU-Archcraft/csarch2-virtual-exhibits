@@ -71,10 +71,26 @@ const others = sections.flatMap((group) => group.exhibits);
             let currentComments = [];
             let sortNewest = true;
 
+            (function captureSessionToken() {
+                const match = window.location.hash.match(/token=([^&]+)/);
+                if (match) {
+                    sessionStorage.setItem('session_token', match[1]);
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+            })();
+
+            function authHeaders() {
+                const token = sessionStorage.getItem('session_token');
+                return token ? { Authorization: `Bearer ${token}` } : {};
+            }
+
             // Authentication state
             async function fetchUser() {
                 try {
-                    const res = await fetch(`${API_BASE}/auth/me`, { credentials: 'include' });
+                    const res = await fetch(`${API_BASE}/auth/me`, {
+                        credentials: 'include',
+                        headers: authHeaders(),
+                    });
                     const data = await res.json();
                     currentUser = data.user || null;
                 } catch {
@@ -93,7 +109,12 @@ const others = sections.flatMap((group) => group.exhibits);
                 const signoutBtn = document.getElementById('signout-btn');
                 if (signoutBtn) {
                     signoutBtn.addEventListener('click', async () => {
-                        await fetch(`${API_BASE}/auth/logout`, { method: 'POST', credentials: 'include' });
+                        await fetch(`${API_BASE}/auth/logout`, {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: authHeaders(),
+                        });
+                        sessionStorage.removeItem('session_token');
                         currentUser = null;
                         renderAuthStatus();
                         if (currentSlug) renderCommentForm();
@@ -201,7 +222,10 @@ const others = sections.flatMap((group) => group.exhibits);
 
             async function fetchLikes(slug) {
                 try {
-                    const res = await fetch(`${API_BASE}/api/exhibits/${slug}/likes`, { credentials: 'include' });
+                    const res = await fetch(`${API_BASE}/api/exhibits/${slug}/likes`, {
+                        credentials: 'include',
+                        headers: authHeaders(),
+                    });
                     if (res.ok) {
                         const { count, liked } = await res.json();
                         starCountEl.textContent = count;
@@ -221,7 +245,8 @@ const others = sections.flatMap((group) => group.exhibits);
                 try {
                     const res = await fetch(`${API_BASE}/api/exhibits/${currentSlug}/likes`, {
                         method: 'POST',
-                        credentials: 'include'
+                        credentials: 'include',
+                        headers: authHeaders(),
                     });
                     if (res.ok) {
                         const { count, liked } = await res.json();
@@ -296,7 +321,7 @@ const others = sections.flatMap((group) => group.exhibits);
                 try {
                     const res = await fetch(`${API_BASE}/api/exhibits/${currentSlug}/comments`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'application/json', ...authHeaders() },
                         credentials: 'include',
                         body: JSON.stringify({ comment: commentText })
                     });
